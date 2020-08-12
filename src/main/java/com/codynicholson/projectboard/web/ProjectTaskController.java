@@ -25,13 +25,11 @@ public class ProjectTaskController {
     @Autowired
     private ProjectTaskService projectTaskService;
 
-    @PostMapping("")
+    @PostMapping("/task")
     public ResponseEntity<?> addPTToBoard(@Valid @RequestBody ProjectTask projectTask, BindingResult result){
 
         if(result.hasErrors()){
             Map<String, String> errorMap = new HashMap<>();
-
-
 
             for(FieldError error: result.getFieldErrors()){
                 errorMap.put(error.getField(), error.getDefaultMessage());
