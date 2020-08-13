@@ -1,0 +1,10 @@
+#title {
+    font-size: 4em;
+    text-align: center;
+}
+
+#message {
+    margin: 60px;
+    font-size: 1.5em;
+    line-height: 2;
+}

@@ -9,10 +9,10 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.codynicholson</groupId>
-	<artifactId>projectboard</artifactId>
+	<artifactId>Project Tracking API Project</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>projectboard</name>
-	<description>Demo project for Spring Boot</description>
+	<description>Backend API for Project Tracking Project</description>
 
 	<properties>
 		<java.version>1.8</java.version>
