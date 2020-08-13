@@ -19,7 +19,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/board")
-@CrossOrigin(origins = "https://project-tracker-react-app.herokuapp.com/")
+@CrossOrigin
 public class ProjectTaskController {
 
     @Autowired
