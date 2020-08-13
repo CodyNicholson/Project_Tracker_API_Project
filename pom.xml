@@ -9,7 +9,7 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.codynicholson</groupId>
-	<artifactId>Project Tracking API Project</artifactId>
+	<artifactId>ProjectTrackingApiProject</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>projectboard</name>
 	<description>Backend API for Project Tracking Project</description>
