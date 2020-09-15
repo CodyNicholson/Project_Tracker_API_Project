@@ -13,6 +13,8 @@ public class ProjectTask {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    private Long projectId;
+
     @NotBlank(message = "Summary cannot be blank")
     private String summary;
     private String acceptanceCriteria;
@@ -21,8 +23,9 @@ public class ProjectTask {
     public ProjectTask() {
     }
 
-    public ProjectTask(Long id, @NotBlank(message = "Summary cannot be blank") String summary, String acceptanceCriteria, String status) {
+    public ProjectTask(Long id, Long projectId, @NotBlank(message = "Summary cannot be blank") String summary, String acceptanceCriteria, String status) {
         this.id = id;
+        this.projectId = projectId;
         this.summary = summary;
         this.acceptanceCriteria = acceptanceCriteria;
         this.status = status;
@@ -34,6 +37,14 @@ public class ProjectTask {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Long getProjectId() {
+        return projectId;
+    }
+
+    public void setProjectId(Long projectId) {
+        this.projectId = projectId;
     }
 
     public String getSummary() {

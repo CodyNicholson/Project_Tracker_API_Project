@@ -24,7 +24,7 @@ public class ProjectTaskTests {
 
     @Before
     public void createTasks() {
-        projectTask = new ProjectTask((long) 1, "Summary 1", "AC 1", "Status 1");
+        projectTask = new ProjectTask((long) 1, (long) 3, "Summary 1", "AC 1", "Status 1");
     }
 
 	@Test

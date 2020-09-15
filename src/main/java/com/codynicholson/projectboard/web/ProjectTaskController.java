@@ -38,6 +38,8 @@ public class ProjectTaskController {
             return new ResponseEntity<Map<String, String>>(errorMap, HttpStatus.BAD_REQUEST);
         }
 
+        projectTask.setProjectId((long) 1562); // hardcode temporary
+
         ProjectTask newPT = projectTaskService.saveOrUpdateProjectTask(projectTask);
 
         return new ResponseEntity<ProjectTask>(newPT, HttpStatus.CREATED);
