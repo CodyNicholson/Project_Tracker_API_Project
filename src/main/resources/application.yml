@@ -1,0 +1,53 @@
+spring:
+  profiles: LOCAL, default, test
+  datasource:
+    url: jdbc:postgresql://192.168.99.100:5432/d303tt7dgo2ndl?currentSchema=public
+    username: fxvjpyhzcgofew
+    password: ${PSQL_PASSWORD:defaultPassword}
+  hikari:
+    minimum-idle: 2
+    maximum-pool-size: 4
+  jpa:
+    database: postgresql
+    hibernate:
+      ddl-auto: update
+  hibernate:
+    default_schema: public
+  lob:
+    non_contextual_creation: true
+    dialect: org.hibernate.dialect.PostgreSQLDialect
+    ddl-auto: update
+  flyway:
+    url: jdbc:postgresql://192.168.99.100:5432/d303tt7dgo2ndl
+    user: fxvjpyhzcgofew
+    password: ${PSQL_PASSWORD:defaultPassword}
+    baseline-on-migrate: true
+    validate-on-migrate: true
+    schemas: public
+---
+spring:
+  profiles: PROD
+  datasource:
+    url: jdbc:postgresql://ec2-54-161-58-21.compute-1.amazonaws.com:5432/d303tt7dgo2ndl?currentSchema=public
+    username: fxvjpyhzcgofew
+    password: ${PSQL_PASSWORD:defaultPassword}
+  hikari:
+    minimum-idle: 2
+    maximum-pool-size: 4
+  jpa:
+    database: postgresql
+    hibernate:
+      ddl-auto: update
+  hibernate:
+    default_schema: public
+  lob:
+    non_contextual_creation: true
+    dialect: org.hibernate.dialect.PostgreSQLDialect
+    ddl-auto: update
+  flyway:
+    url: jdbc:postgresql://ec2-54-161-58-21.compute-1.amazonaws.com:5432/d303tt7dgo2ndl
+    user: fxvjpyhzcgofew
+    password: ${PSQL_PASSWORD:defaultPassword}
+    baseline-on-migrate: true
+    validate-on-migrate: true
+    schemas: public

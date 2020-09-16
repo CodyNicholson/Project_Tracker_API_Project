@@ -1,31 +1,32 @@
-package com.codynicholson.projectboard.domain;
+package com.projecttrackerapi.domain;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.validation.constraints.NotBlank;
+import javax.persistence.*;
 
 @Entity
-public class ProjectTask {
-
+@Table(name = "project_tasks")
+public class ProjectTaskEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Long projectId;
-
-    @NotBlank(message = "Summary cannot be blank")
+    @Column(name = "summary")
     private String summary;
+
+    @Column(name = "acceptance_criteria")
     private String acceptanceCriteria;
+
+    @Column(name = "status")
     private String status;
 
-    public ProjectTask() {
+    @ManyToOne
+    @JoinColumn(name ="project_id", nullable = false)
+    private ProjectEntity projectEntity;
+
+    public ProjectTaskEntity() {
     }
 
-    public ProjectTask(Long id, Long projectId, @NotBlank(message = "Summary cannot be blank") String summary, String acceptanceCriteria, String status) {
+    public ProjectTaskEntity(Long id, String summary, String acceptanceCriteria, String status) {
         this.id = id;
-        this.projectId = projectId;
         this.summary = summary;
         this.acceptanceCriteria = acceptanceCriteria;
         this.status = status;
@@ -37,14 +38,6 @@ public class ProjectTask {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public Long getProjectId() {
-        return projectId;
-    }
-
-    public void setProjectId(Long projectId) {
-        this.projectId = projectId;
     }
 
     public String getSummary() {
