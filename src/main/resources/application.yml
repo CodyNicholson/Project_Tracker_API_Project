@@ -21,10 +21,6 @@ spring:
 #              action: create
 #              create-target: src/main/resources/db/schema.sql
 #              create-source: metadata
-#  lob:
-#    non_contextual_creation: true
-#    dialect: org.hibernate.dialect.PostgreSQLDialect
-#    ddl-auto: update
 #  flyway:
 #    url: jdbc:postgresql://192.168.99.100:5432/d303tt7dgo2ndl
 #    user: fxvjpyhzcgofew
@@ -49,10 +45,6 @@ spring:
   hikari:
     minimum-idle: 2
     maximum-pool-size: 4
-#  lob:
-#    non_contextual_creation: true
-#    dialect: org.hibernate.dialect.PostgreSQLDialect
-#    ddl-auto: update
 #  flyway:
 #    url: jdbc:postgresql://ec2-54-161-58-21.compute-1.amazonaws.com:5432/d303tt7dgo2ndl
 #    user: fxvjpyhzcgofew
