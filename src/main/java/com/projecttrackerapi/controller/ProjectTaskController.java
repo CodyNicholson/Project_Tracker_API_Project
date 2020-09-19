@@ -2,7 +2,7 @@ package com.projecttrackerapi.controller;
 
 import com.projecttrackerapi.constants.Constants;
 import com.projecttrackerapi.service.ProjectTaskService;
-import com.projecttrackerapi.domain.ProjectTaskEntity;
+import com.projecttrackerapi.entities.ProjectTask;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,8 +23,7 @@ public class ProjectTaskController {
     private ProjectTaskService projectTaskService;
 
     @PostMapping("/")
-    public ResponseEntity<?> addProjectTaskToBoard(@Valid @RequestBody ProjectTaskEntity projectTaskEntity, BindingResult result){
-
+    public ResponseEntity<?> addProjectTaskToBoard(@Valid @RequestBody ProjectTask projectTask, BindingResult result){
         if(result.hasErrors()){
             Map<String, String> errorMap = new HashMap<>();
 
@@ -35,20 +34,20 @@ public class ProjectTaskController {
             return new ResponseEntity<Map<String, String>>(errorMap, HttpStatus.BAD_REQUEST);
         }
 
-        ProjectTaskEntity newPT = projectTaskService.saveOrUpdateProjectTask(projectTaskEntity);
+        ProjectTask newPT = projectTaskService.saveOrUpdateProjectTask(projectTask);
 
-        return new ResponseEntity<ProjectTaskEntity>(newPT, HttpStatus.CREATED);
+        return new ResponseEntity<ProjectTask>(newPT, HttpStatus.CREATED);
     }
 
     @GetMapping("/all")
-    public Iterable<ProjectTaskEntity> getAllPTs(){
+    public Iterable<ProjectTask> getAllPTs(){
         return projectTaskService.findAll();
     }
 
     @GetMapping("/{project_task_id}")
     public ResponseEntity<?> getProjectTaskById(@PathVariable Long project_task_id){
-        ProjectTaskEntity projectTaskEntity = projectTaskService.findById(project_task_id);
-        return new ResponseEntity<ProjectTaskEntity>(projectTaskEntity, HttpStatus.OK);
+        ProjectTask projectTask = projectTaskService.findById(project_task_id);
+        return new ResponseEntity<ProjectTask>(projectTask, HttpStatus.OK);
     }
 
     @DeleteMapping("/{project_task_id}")

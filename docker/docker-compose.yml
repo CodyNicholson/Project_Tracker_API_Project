@@ -5,9 +5,9 @@ services:
     container_name: "postgres"
     ports:
       - "5432:5432"
-    volumes:
-      - /var/lib/postgresql/data
     environment:
       POSTGRES_USER: fxvjpyhzcgofew
       POSTGRES_DB: d303tt7dgo2ndl
       POSTGRES_HOST_AUTH_METHOD: trust
+    volumes:
+      - /var/lib/postgresql/data

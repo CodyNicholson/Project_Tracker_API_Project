@@ -1,9 +1,11 @@
 package com.projecttrackerapi.service;
-import com.projecttrackerapi.domain.ProjectTaskEntity;
+import com.projecttrackerapi.entities.ProjectTask;
 import com.projecttrackerapi.repository.ProjectTaskRepository;
 import com.projecttrackerapi.constants.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import javax.validation.constraints.NotNull;
 
 @Service
 public class ProjectTaskService {
@@ -11,25 +13,24 @@ public class ProjectTaskService {
     @Autowired
     private ProjectTaskRepository projectTaskRepository;
 
-    public ProjectTaskEntity saveOrUpdateProjectTask(ProjectTaskEntity projectTaskEntity){
-
-        if(projectTaskEntity.getStatus() == null || projectTaskEntity.getStatus().isEmpty()){
-            projectTaskEntity.setStatus(Constants.TODO_STATUS);
+    public ProjectTask saveOrUpdateProjectTask(ProjectTask projectTask){
+        if(projectTask.getStatus() == null || projectTask.getStatus().isEmpty()){
+            projectTask.setStatus(Constants.TODO_STATUS);
         }
 
-        return projectTaskRepository.save(projectTaskEntity);
+        return projectTaskRepository.save(projectTask);
     }
 
-    public Iterable<ProjectTaskEntity> findAll(){
+    public Iterable<ProjectTask> findAll(){
         return projectTaskRepository.findAll();
     }
 
-    public ProjectTaskEntity findById(Long id){
+    public ProjectTask findById(Long id){
         return projectTaskRepository.getById(id);
     }
 
     public void delete(Long id){
-        ProjectTaskEntity projectTaskEntity = findById(id);
-        projectTaskRepository.delete(projectTaskEntity);
+        ProjectTask projectTask = findById(id);
+        projectTaskRepository.delete(projectTask);
     }
 }

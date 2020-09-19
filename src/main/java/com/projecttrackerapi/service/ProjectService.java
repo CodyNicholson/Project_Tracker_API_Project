@@ -1,6 +1,6 @@
 package com.projecttrackerapi.service;
 
-import com.projecttrackerapi.domain.ProjectEntity;
+import com.projecttrackerapi.entities.Project;
 import com.projecttrackerapi.repository.ProjectRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -11,20 +11,20 @@ public class ProjectService {
     @Autowired
     private ProjectRepository projectRepository;
 
-    public ProjectEntity saveOrUpdateProject(ProjectEntity projectEntity){
-        return projectRepository.save(projectEntity);
+    public Project saveOrUpdateProject(Project project){
+        return projectRepository.save(project);
     }
 
-    public Iterable<ProjectEntity> findAll(){
+    public Iterable<Project> findAll(){
         return projectRepository.findAll();
     }
 
-    public ProjectEntity findById(Long id){
+    public Project findById(Long id){
         return projectRepository.getById(id);
     }
 
     public void delete(Long id){
-        ProjectEntity projectEntity = findById(id);
-        projectRepository.delete(projectEntity);
+        Project project = findById(id);
+        projectRepository.delete(project);
     }
 }

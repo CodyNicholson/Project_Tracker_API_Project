@@ -1,10 +1,8 @@
 package com.projecttrackerapi.controller;
 
 import com.projecttrackerapi.constants.Constants;
-import com.projecttrackerapi.domain.ProjectEntity;
-import com.projecttrackerapi.domain.ProjectTaskEntity;
+import com.projecttrackerapi.entities.Project;
 import com.projecttrackerapi.service.ProjectService;
-import com.projecttrackerapi.service.ProjectTaskService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,7 +23,7 @@ public class ProjectController {
     private ProjectService projectService;
 
     @PostMapping("/")
-    public ResponseEntity<?> addProjectToBoard(@Valid @RequestBody ProjectEntity projectEntity, BindingResult result){
+    public ResponseEntity<?> addProjectToBoard(@Valid @RequestBody Project project, BindingResult result){
 
         if(result.hasErrors()){
             Map<String, String> errorMap = new HashMap<>();
@@ -37,20 +35,20 @@ public class ProjectController {
             return new ResponseEntity<Map<String, String>>(errorMap, HttpStatus.BAD_REQUEST);
         }
 
-        ProjectEntity newProject = projectService.saveOrUpdateProject(projectEntity);
+        Project newProject = projectService.saveOrUpdateProject(project);
 
-        return new ResponseEntity<ProjectEntity>(newProject, HttpStatus.CREATED);
+        return new ResponseEntity<Project>(newProject, HttpStatus.CREATED);
     }
 
     @GetMapping("/all")
-    public Iterable<ProjectEntity> getAllPTs(){
+    public Iterable<Project> getAllPTs(){
         return projectService.findAll();
     }
 
     @GetMapping("/{pt_id}")
     public ResponseEntity<?> getProjectById(@PathVariable Long pt_id){
-        ProjectEntity projectEntity = projectService.findById(pt_id);
-        return new ResponseEntity<ProjectEntity>(projectEntity, HttpStatus.OK);
+        Project project = projectService.findById(pt_id);
+        return new ResponseEntity<Project>(project, HttpStatus.OK);
     }
 
     @DeleteMapping("/{pt_id}")
