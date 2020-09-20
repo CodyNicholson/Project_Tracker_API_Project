@@ -2,6 +2,7 @@ package com.projecttrackerapi.entities;
 
 import lombok.*;
 import javax.persistence.*;
+import java.util.UUID;
 
 @EqualsAndHashCode(callSuper = true)
 @Entity
@@ -9,13 +10,10 @@ import javax.persistence.*;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ProjectTask extends EntityWithUUID {
+    private UUID projectId;
     private String summary;
     private String acceptanceCriteria;
     private String status;
-
-    @ManyToOne(cascade = CascadeType.REMOVE)
-    @JoinColumn(foreignKey = @ForeignKey(name = "fk_project_id"))
-    private Project project;
 }
 
 

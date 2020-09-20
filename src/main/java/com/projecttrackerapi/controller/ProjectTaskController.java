@@ -1,18 +1,13 @@
 package com.projecttrackerapi.controller;
 
-import com.projecttrackerapi.constants.Constants;
-import com.projecttrackerapi.service.ProjectTaskService;
 import com.projecttrackerapi.entities.ProjectTask;
+import com.projecttrackerapi.models.GenericResponseModel;
+import com.projecttrackerapi.service.ProjectTaskService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
-
-import javax.validation.Valid;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/task")
@@ -23,36 +18,34 @@ public class ProjectTaskController {
     private ProjectTaskService projectTaskService;
 
     @PostMapping("/")
-    public ResponseEntity<?> addProjectTaskToBoard(@Valid @RequestBody ProjectTask projectTask, BindingResult result){
-        if(result.hasErrors()){
-            Map<String, String> errorMap = new HashMap<>();
-
-            for(FieldError error: result.getFieldErrors()){
-                errorMap.put(error.getField(), error.getDefaultMessage());
-            }
-
-            return new ResponseEntity<Map<String, String>>(errorMap, HttpStatus.BAD_REQUEST);
-        }
-
-        ProjectTask newPT = projectTaskService.saveOrUpdateProjectTask(projectTask);
-
-        return new ResponseEntity<ProjectTask>(newPT, HttpStatus.CREATED);
+    @ResponseStatus(HttpStatus.CREATED)
+    public ResponseEntity<GenericResponseModel> addProjectTaskToBoard(@RequestBody ProjectTask projectTask){
+        ProjectTask newProjectTask = projectTaskService.saveOrUpdateProjectTask(projectTask);
+        GenericResponseModel responseModel = new GenericResponseModel(201, newProjectTask);
+        return new ResponseEntity<GenericResponseModel>(responseModel, HttpStatus.CREATED);
     }
 
     @GetMapping("/all")
-    public Iterable<ProjectTask> getAllPTs(){
-        return projectTaskService.findAll();
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<GenericResponseModel> getAllPTs(){
+        Iterable<ProjectTask> projectTasks = projectTaskService.findAll();
+        GenericResponseModel responseModel = new GenericResponseModel(200, projectTasks);
+        return new ResponseEntity<GenericResponseModel>(responseModel, HttpStatus.OK);
     }
 
     @GetMapping("/{project_task_id}")
-    public ResponseEntity<?> getProjectTaskById(@PathVariable Long project_task_id){
-        ProjectTask projectTask = projectTaskService.findById(project_task_id);
-        return new ResponseEntity<ProjectTask>(projectTask, HttpStatus.OK);
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<GenericResponseModel> getProjectTaskById(@PathVariable String project_task_id){
+        ProjectTask projectTask = projectTaskService.findById(UUID.fromString(project_task_id));
+        GenericResponseModel responseModel = new GenericResponseModel(200, projectTask);
+        return new ResponseEntity<GenericResponseModel>(responseModel, HttpStatus.OK);
     }
 
     @DeleteMapping("/{project_task_id}")
-    public ResponseEntity<?> deleteProjectTask(@PathVariable Long project_task_id){
-        projectTaskService.delete(project_task_id);
-        return new ResponseEntity<String>(Constants.PROJECT_TASK_DELETED, HttpStatus.OK);
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<GenericResponseModel> deleteProjectTask(@PathVariable String project_task_id){
+        ProjectTask projectTask = projectTaskService.delete(UUID.fromString(project_task_id));
+        GenericResponseModel responseModel = new GenericResponseModel(200, projectTask);
+        return new ResponseEntity<GenericResponseModel>(responseModel, HttpStatus.OK);
     }
 }

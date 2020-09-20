@@ -8,7 +8,7 @@ import java.util.UUID;
 
 @Repository
 public interface ProjectTaskRepository extends CrudRepository<ProjectTask, Long> {
-    ProjectTask getById(Long id);
+    ProjectTask getById(UUID id);
     List<ProjectTask> findAllByProjectId(UUID projectId);
     List<ProjectTask> deleteByProjectId(UUID projectId);
 }
