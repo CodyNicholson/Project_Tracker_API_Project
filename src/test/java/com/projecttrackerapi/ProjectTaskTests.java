@@ -21,8 +21,8 @@ public class ProjectTaskTests {
 
     @Before
     public void createProjectWithTasks() {
-        Project project = new Project("name", "description", new Date(), null, "deployedLink", "docLink", "codeLink");
-        projectTask = new ProjectTask("Summary 1", "AC 1", "Status 1", project);
+//        Project project = new Project("name", "description", new Date(), null, "deployedLink", "docLink", "codeLink", null);
+//        projectTask = new ProjectTask("Summary 1", "AC 1", "Status 1", project);
     }
 
 	@Test

@@ -4,16 +4,16 @@ spring:
     url: jdbc:postgresql://192.168.99.100:5432/d303tt7dgo2ndl
     username: fxvjpyhzcgofew
     password: ${PSQL_PASSWORD:defaultPassword}
+  hikari:
+    minimum-idle: 2
+    maximum-pool-size: 4
   jpa:
     database: postgresql
     hibernate:
       ddl-auto: create
     properties:
       hibernate:
-        dialect: org.hibernate.dialect.PostgreSQLDialect
-  hikari:
-    minimum-idle: 2
-    maximum-pool-size: 4
+      dialect: org.hibernate.dialect.PostgreSQLDialect
 #      javax:
 #        persistence:
 #          schema-generation:
@@ -35,6 +35,9 @@ spring:
     url: jdbc:postgresql://ec2-54-161-58-21.compute-1.amazonaws.com:5432/d303tt7dgo2ndl?currentSchema=public
     username: fxvjpyhzcgofew
     password: ${PSQL_PASSWORD:defaultPassword}
+  hikari:
+    minimum-idle: 2
+    maximum-pool-size: 4
   jpa:
     database: postgresql
     hibernate:
@@ -42,9 +45,6 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
-  hikari:
-    minimum-idle: 2
-    maximum-pool-size: 4
 #  flyway:
 #    url: jdbc:postgresql://ec2-54-161-58-21.compute-1.amazonaws.com:5432/d303tt7dgo2ndl
 #    user: fxvjpyhzcgofew
