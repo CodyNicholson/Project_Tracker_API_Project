@@ -29,11 +29,11 @@ public class ProjectDao {
         projectRepository.save(project2);
 
         // create tasks
-        ProjectTask task1 = new ProjectTask(project1.getId(), "Summary 1", "AC 1", "Status 1");
-        ProjectTask task2 = new ProjectTask(project1.getId(), "Summary 2", "AC 2", "Status 2");
-        ProjectTask task3 = new ProjectTask(project2.getId(), "Summary 3", "AC 3", "Status 3");
-        ProjectTask task4 = new ProjectTask(project2.getId(), "Summary 4", "AC 4", "Status 4");
-        ProjectTask task5 = new ProjectTask(project2.getId(), "Summary 5", "AC 5", "Status 5");
+        ProjectTask task1 = new ProjectTask(project1.getId(), "name 1", "description 1", "AC 1", 3.0, "Status 1", null);
+        ProjectTask task2 = new ProjectTask(project1.getId(), "name 2", "description 2", "AC 2", 1, "Status 2", null);
+        ProjectTask task3 = new ProjectTask(project2.getId(), "name 3", "description 3", "AC 3", 8, "Status 3", "blocked");
+        ProjectTask task4 = new ProjectTask(project2.getId(), "name 4", "description 4", "AC 4", 1, "Status 4", null);
+        ProjectTask task5 = new ProjectTask(project2.getId(), "name 5", "description 5", "AC 5", 2, "Status 5", "blocked");
 
         projectTaskRepository.save(task1);
         projectTaskRepository.save(task2);
