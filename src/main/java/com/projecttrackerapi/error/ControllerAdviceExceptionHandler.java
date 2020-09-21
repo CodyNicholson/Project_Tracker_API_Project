@@ -1,15 +1,12 @@
 package com.projecttrackerapi.error;
 
 import com.projecttrackerapi.constants.Constants;
-import com.projecttrackerapi.error.restCustomExceptions.BadRequestException;
-import com.projecttrackerapi.error.restCustomExceptions.InternalServerErrorException;
-import com.projecttrackerapi.error.restCustomExceptions.NotFoundException;
+import com.projecttrackerapi.error.restCustomExceptions.*;
 import org.slf4j.Logger;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import java.util.Date;
@@ -46,8 +43,20 @@ public class ControllerAdviceExceptionHandler extends ResponseEntityExceptionHan
         return new ResponseEntity<ErrorResponseModel>(errorDetails, HttpStatus.NOT_FOUND);
     }
 
+    @ExceptionHandler(value = { ConflictException.class })
+    protected ResponseEntity<ErrorResponseModel> handleConflictException(Exception ex) {
+        logger.error(Constants.REST_CONFLICT, ex);
+
+        ErrorResponseModel errorDetails = new ErrorResponseModel(
+                new Date(),
+                Constants.REST_CONFLICT,
+                ex.getMessage());
+
+        return new ResponseEntity<ErrorResponseModel>(errorDetails, HttpStatus.CONFLICT);
+    }
+
     @ExceptionHandler(value = { InternalServerErrorException.class, RuntimeException.class })
-    protected ResponseEntity<ErrorResponseModel> handleInternalServerError(Exception ex, WebRequest request) {
+    protected ResponseEntity<ErrorResponseModel> handleInternalServerError(Exception ex) {
 
         logger.info(Constants.REST_INTERNAL_SERVER_ERROR, ex);
 
@@ -57,5 +66,18 @@ public class ControllerAdviceExceptionHandler extends ResponseEntityExceptionHan
                 ex.getMessage());
 
         return new ResponseEntity<ErrorResponseModel>(errorDetails, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @ExceptionHandler(value = { ServiceUnavailableException.class, Exception.class })
+    protected ResponseEntity<ErrorResponseModel> handleServiceUnavailableError(Exception ex) {
+
+        logger.info(Constants.REST_SERVICE_UNAVAILABLE, ex);
+
+        ErrorResponseModel errorDetails = new ErrorResponseModel(
+                new Date(),
+                Constants.REST_SERVICE_UNAVAILABLE,
+                ex.getMessage());
+
+        return new ResponseEntity<ErrorResponseModel>(errorDetails, HttpStatus.SERVICE_UNAVAILABLE);
     }
 }
