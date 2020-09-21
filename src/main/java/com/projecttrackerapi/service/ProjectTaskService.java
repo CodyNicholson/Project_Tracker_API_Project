@@ -1,48 +1,33 @@
 package com.projecttrackerapi.service;
 
-import com.projecttrackerapi.entities.ProjectTask;
-import com.projecttrackerapi.repository.ProjectTaskRepository;
-import com.projecttrackerapi.constants.Constants;
-import org.slf4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.projecttrackerapi.dao.ProjectDao;
+import com.projecttrackerapi.models.ProjectTaskDto;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 import java.util.UUID;
 
 @Service
 public class ProjectTaskService {
+    private final ProjectDao projectDao;
 
-    private final Constants constants = new Constants();
-    private final Logger logger;
-
-    @Autowired
-    private ProjectTaskRepository projectTaskRepository;
-
-    public ProjectTaskService(Logger logger) {
-        this.logger = logger;
+    public ProjectTaskService(ProjectDao projectDao) {
+        this.projectDao = projectDao;
     }
 
-    public ProjectTask saveOrUpdateProjectTask(ProjectTask projectTask){
-        if(projectTask.getStatus() == null || projectTask.getStatus().isEmpty()){
-            projectTask.setStatus(Constants.TODO_STATUS);
-        }
-
-        logger.info(constants.saveOrUpdateProjectTaskMessage(projectTask));
-
-        return projectTaskRepository.save(projectTask);
+    public ProjectTaskDto saveOrUpdateProjectTask(ProjectTaskDto projectTaskDto) {
+        return projectDao.saveOrUpdateProjectTask(projectTaskDto);
     }
 
-    public Iterable<ProjectTask> findAll(){
-        return projectTaskRepository.findAll();
+    public List<ProjectTaskDto> getAllProjectTasks() {
+        return projectDao.findAllProjectTasks();
     }
 
-    public ProjectTask findById(UUID id){
-        return projectTaskRepository.getById(id);
+    public ProjectTaskDto getProjectTaskById(UUID projectId) {
+        return projectDao.findProjectTaskById(projectId);
     }
 
-    public ProjectTask delete(UUID id){
-        ProjectTask projectTask = findById(id);
-        projectTaskRepository.delete(projectTask);
-        logger.info(constants.deleteProjectTaskMessage(projectTask));
-        return projectTask;
+    public ProjectTaskDto deleteProjectTaskById(UUID projectId) {
+        return projectDao.deleteProjectTasksByProjectId(projectId);
     }
 }

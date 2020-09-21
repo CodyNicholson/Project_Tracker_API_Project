@@ -1,52 +1,38 @@
 package com.projecttrackerapi.service;
 
-import com.projecttrackerapi.constants.Constants;
-import com.projecttrackerapi.entities.Project;
-import com.projecttrackerapi.entities.ProjectTask;
+import com.projecttrackerapi.dao.ProjectDao;
+import com.projecttrackerapi.error.restCustomExceptions.BadRequestException;
 import com.projecttrackerapi.models.DeleteProjectResponseModel;
-import com.projecttrackerapi.repository.ProjectRepository;
-import com.projecttrackerapi.repository.ProjectTaskRepository;
-import org.slf4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.projecttrackerapi.models.ProjectDto;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+
 import java.util.List;
 import java.util.UUID;
 
 @Service
 public class ProjectService {
+    private final ProjectDao projectDao;
 
-    private final Logger logger;
-
-    @Autowired
-    private ProjectRepository projectRepository;
-
-    @Autowired
-    private ProjectTaskRepository projectTaskRepository;
-
-    public ProjectService(Logger logger) {
-        this.logger = logger;
+    public ProjectService(ProjectDao projectDao) {
+        this.projectDao = projectDao;
     }
 
-    public Project saveOrUpdateProject(Project project){
-        logger.info(new Constants().saveOrUpdateProjectMessage(project));
-        return projectRepository.save(project);
+    public ProjectDto saveOrUpdateProject(ProjectDto project) {
+        if (project.getName() == null || project.getName().isEmpty()) {
+            throw new BadRequestException("CONST ME", null);
+        }
+        return projectDao.saveOrUpdateProject(project);
     }
 
-    public Iterable<Project> findAll(){
-        return projectRepository.findAll();
+    public List<ProjectDto> getAllProjects() {
+        return projectDao.findAllProjects();
     }
 
-    public Project findById(UUID id){
-        return projectRepository.getById(id);
+    public ProjectDto getProjectById(UUID projectId) {
+        return projectDao.findProjectById(projectId);
     }
 
-    @Transactional
-    public DeleteProjectResponseModel delete(UUID id){
-        Project deletedProject = projectRepository.getById(id);
-        List<ProjectTask> deletedProjectTasks = projectTaskRepository.deleteByProjectId(id);
-        projectRepository.delete(deletedProject);
-        logger.info(new Constants().deleteProjectMessage(deletedProject, deletedProjectTasks));
-        return new DeleteProjectResponseModel(deletedProject, deletedProjectTasks);
+    public DeleteProjectResponseModel deleteProjectById(UUID projectId) {
+        return projectDao.deleteProject(projectId);
     }
 }

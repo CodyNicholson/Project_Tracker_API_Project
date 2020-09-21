@@ -1,19 +1,11 @@
-package com.projecttrackerapi.entities;
+package com.projecttrackerapi.models;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
-import javax.persistence.Entity;
 import java.util.Date;
 import java.util.UUID;
 
-@EqualsAndHashCode(callSuper = true)
-@Entity
 @Data
-@AllArgsConstructor
-@NoArgsConstructor
-public class Project extends EntityWithUUID {
+public class ProjectDto {
     private UUID id;
     private String name;
     private String description;

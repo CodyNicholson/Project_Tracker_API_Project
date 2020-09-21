@@ -1,29 +1,133 @@
 package com.projecttrackerapi.dao;
 
+import com.projecttrackerapi.constants.Constants;
 import com.projecttrackerapi.entities.Project;
 import com.projecttrackerapi.entities.ProjectTask;
+import com.projecttrackerapi.models.DeleteProjectResponseModel;
+import com.projecttrackerapi.models.ProjectDto;
+import com.projecttrackerapi.models.ProjectTaskDto;
 import com.projecttrackerapi.repository.ProjectRepository;
 import com.projecttrackerapi.repository.ProjectTaskRepository;
+import org.modelmapper.ModelMapper;
+import org.slf4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import javax.annotation.PostConstruct;
 import javax.transaction.Transactional;
-import java.util.Date;
+import java.util.*;
 
 @Service
 public class ProjectDao {
-    private final ProjectRepository projectRepository;
-    private final ProjectTaskRepository projectTaskRepository;
+    @Autowired
+    private ProjectRepository projectRepository;
 
-    public ProjectDao(ProjectRepository projectRepository, ProjectTaskRepository projectTaskRepository) {
-        this.projectRepository = projectRepository;
-        this.projectTaskRepository = projectTaskRepository;
+    @Autowired
+    private ProjectTaskRepository projectTaskRepository;
+
+    @Autowired
+    private ModelMapper modelMapper;
+
+    private final Logger logger;
+
+    public ProjectDao(Logger logger) {
+        this.logger = logger;
+    }
+
+    public ProjectDto saveOrUpdateProject(ProjectDto project){
+        logger.info(Constants.saveOrUpdateProjectMessage(project));
+        Project savedProject = projectRepository.save(projectDtoToEntity(project));
+        return projectEntityToDto(savedProject);
+    }
+
+    public List<ProjectDto> findAllProjects(){
+        return projectEntitiesToDtos(projectRepository.findAll());
+    }
+
+    public ProjectDto findProjectById(UUID id){
+        return projectEntityToDto(projectRepository.getById(id));
+    }
+
+    @Transactional
+    public DeleteProjectResponseModel deleteProject(UUID id){
+        Project project = projectRepository.getById(id);
+        List<ProjectTask> projectTasks = projectTaskRepository.deleteByProjectId(id);
+        projectRepository.delete(project);
+
+        ProjectDto deletedProjectDto = projectEntityToDto(project);
+        List<ProjectTaskDto> deletedProjectTaskDtos = projectTaskEntitiesToDtos(projectTasks);
+
+        logger.info(Constants.deleteProjectMessage(deletedProjectDto, deletedProjectTaskDtos));
+        return new DeleteProjectResponseModel(deletedProjectDto, deletedProjectTaskDtos);
+    }
+
+    public ProjectTaskDto saveOrUpdateProjectTask(ProjectTaskDto projectTaskDto){
+        if(projectTaskDto.getStatus() == null || projectTaskDto.getStatus().isEmpty()){
+            projectTaskDto.setStatus(Constants.TODO_STATUS);
+        }
+
+        logger.info(Constants.saveOrUpdateProjectTaskMessage(projectTaskDto));
+        ProjectTask savedProjectTask = projectTaskRepository.save(projectTaskDtoToEntity(projectTaskDto));
+        return projectTaskEntityToDto(savedProjectTask);
+    }
+
+    public List<ProjectTaskDto> findAllProjectTasks() {
+        Iterable<ProjectTask> projectTasksIterable = projectTaskRepository.findAll();
+        List<ProjectTask> projectTasksList = new ArrayList<ProjectTask>();
+        projectTasksIterable.forEach(projectTasksList::add);
+        return projectTaskEntitiesToDtos(projectTasksList);
+    }
+
+    public ProjectTaskDto findProjectTaskById(UUID id){
+        return projectTaskEntityToDto(projectTaskRepository.getById(id));
+    }
+
+    public ProjectTaskDto deleteProjectTasksByProjectId(UUID id){
+        ProjectTask projectTask = projectTaskRepository.getById(id);
+        projectTaskRepository.delete(projectTask);
+        ProjectTaskDto deletedProjectTaskDto = projectTaskEntityToDto(projectTask);
+        logger.info(Constants.deleteProjectTaskMessage(deletedProjectTaskDto));
+        return deletedProjectTaskDto;
+    }
+
+    private Project projectDtoToEntity(ProjectDto projectDto) {
+        return modelMapper.map(projectDto, Project.class);
+    }
+
+    private ProjectTask projectTaskDtoToEntity(ProjectTaskDto projectTaskDto) {
+        return modelMapper.map(projectTaskDto, ProjectTask.class);
+    }
+
+    private ProjectDto projectEntityToDto(Project project) {
+        return modelMapper.map(project, ProjectDto.class);
+    }
+
+    private ProjectTaskDto projectTaskEntityToDto(ProjectTask projectTask) {
+        return modelMapper.map(projectTask, ProjectTaskDto.class);
+    }
+
+    private List<ProjectTaskDto> projectTaskEntitiesToDtos(List<ProjectTask> projectTasks) {
+        List<ProjectTaskDto> projectTaskDtos = new ArrayList<ProjectTaskDto>(Collections.emptyList());
+        for (ProjectTask projectTask : projectTasks) {
+            ProjectTaskDto projectTaskDto = projectTaskEntityToDto(projectTask);
+            projectTaskDtos.add(projectTaskDto);
+        }
+        return projectTaskDtos;
+    }
+
+    private List<ProjectDto> projectEntitiesToDtos(Iterable<Project> projects) {
+        List<ProjectDto> projectDtos = new ArrayList<ProjectDto>(Collections.emptyList());
+        for (Project project : projects) {
+            ProjectDto projectDto = projectEntityToDto(project);
+            projectDtos.add(projectDto);
+        }
+        return projectDtos;
     }
 
     @PostConstruct
     @Transactional
-    public void fillData(){
-        Project project1 = new Project("project1", "description1", new Date(), null, "deployedLink1", "docLink1", "codeLink1");
-        Project project2 = new Project("project2", "description2", new Date(), null, "deployedLink2", "docLink2", "codeLink2");
+    private void fillTestData(){
+        Project project1 = new Project(UUID.randomUUID(), "project1", "description1", new Date(), null, "deployedLink1", "docLink1", "codeLink1");
+        Project project2 = new Project(UUID.randomUUID(), "project2", "description2", new Date(), null, "deployedLink2", "docLink2", "codeLink2");
 
         projectRepository.save(project1);
         projectRepository.save(project2);
