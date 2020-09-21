@@ -8,6 +8,6 @@ import lombok.EqualsAndHashCode;
 @Data
 @AllArgsConstructor
 public class BadRequestException extends RuntimeException {
-    private final String errorMessage;
+    private final String message;
     private final Throwable cause;
 }

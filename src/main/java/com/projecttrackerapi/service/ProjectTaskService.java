@@ -1,6 +1,10 @@
 package com.projecttrackerapi.service;
 
+import com.projecttrackerapi.constants.Constants;
 import com.projecttrackerapi.dao.ProjectDao;
+import com.projecttrackerapi.entities.Project;
+import com.projecttrackerapi.error.restCustomExceptions.NotFoundException;
+import com.projecttrackerapi.models.ProjectDto;
 import com.projecttrackerapi.models.ProjectTaskDto;
 import org.springframework.stereotype.Service;
 
@@ -16,6 +20,12 @@ public class ProjectTaskService {
     }
 
     public ProjectTaskDto saveOrUpdateProjectTask(ProjectTaskDto projectTaskDto) {
+        try {
+            projectDao.findProjectById(projectTaskDto.getId());
+        } catch (IllegalArgumentException ex) {
+            throw new NotFoundException(Constants.PROJECT_FOR_TASK_NOT_FOUND, null);
+        }
+
         return projectDao.saveOrUpdateProjectTask(projectTaskDto);
     }
 

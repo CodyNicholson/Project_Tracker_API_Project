@@ -3,6 +3,7 @@ package com.projecttrackerapi.error;
 import com.projecttrackerapi.constants.Constants;
 import com.projecttrackerapi.error.restCustomExceptions.BadRequestException;
 import com.projecttrackerapi.error.restCustomExceptions.InternalServerErrorException;
+import com.projecttrackerapi.error.restCustomExceptions.NotFoundException;
 import org.slf4j.Logger;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,9 +29,21 @@ public class ControllerAdviceExceptionHandler extends ResponseEntityExceptionHan
         ErrorResponseModel errorDetails = new ErrorResponseModel(
                 new Date(),
                 Constants.REST_BAD_REQUEST,
-                ex.getLocalizedMessage());
+                ex.getMessage());
 
         return new ResponseEntity<ErrorResponseModel>(errorDetails, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(value = { NotFoundException.class })
+    protected ResponseEntity<ErrorResponseModel> handleNotFoundException(Exception ex) {
+        logger.error(Constants.REST_NOT_FOUND, ex);
+
+        ErrorResponseModel errorDetails = new ErrorResponseModel(
+                new Date(),
+                Constants.REST_NOT_FOUND,
+                ex.getMessage());
+
+        return new ResponseEntity<ErrorResponseModel>(errorDetails, HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(value = { InternalServerErrorException.class, RuntimeException.class })
@@ -41,7 +54,7 @@ public class ControllerAdviceExceptionHandler extends ResponseEntityExceptionHan
         ErrorResponseModel errorDetails = new ErrorResponseModel(
                 new Date(),
                 Constants.REST_INTERNAL_SERVER_ERROR,
-                ex.getLocalizedMessage());
+                ex.getMessage());
 
         return new ResponseEntity<ErrorResponseModel>(errorDetails, HttpStatus.INTERNAL_SERVER_ERROR);
     }
