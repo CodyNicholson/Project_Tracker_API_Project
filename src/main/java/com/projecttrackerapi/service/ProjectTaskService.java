@@ -49,9 +49,9 @@ public class ProjectTaskService {
         return projectDao.findAllProjectTasks();
     }
 
-    public ProjectTaskDto getProjectTaskById(UUID projectId) {
+    public ProjectTaskDto getProjectTaskById(UUID projectTaskId) {
         try {
-            return projectDao.findProjectTaskById(projectId);
+            return projectDao.findProjectTaskById(projectTaskId);
         } catch (IllegalArgumentException ex) {
             throw new NotFoundException(Constants.PROJECT_TASK_NOT_FOUND, null);
         }

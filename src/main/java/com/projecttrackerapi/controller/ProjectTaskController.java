@@ -36,17 +36,17 @@ public class ProjectTaskController {
         return new ResponseEntity<GenericResponseModel>(responseModel, HttpStatus.OK);
     }
 
-    @GetMapping("/{project_task_id}")
+    @GetMapping("/{projectTaskId}")
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<GenericResponseModel> getProjectTaskById(@PathVariable String projectTaskId){
+    public ResponseEntity<GenericResponseModel> getProjectTaskById(@PathVariable("projectTaskId") String projectTaskId){
         ProjectTaskDto projectTaskDto = projectTaskService.getProjectTaskById(UUID.fromString(projectTaskId));
         GenericResponseModel responseModel = new GenericResponseModel(200, projectTaskDto);
         return new ResponseEntity<GenericResponseModel>(responseModel, HttpStatus.OK);
     }
 
-    @DeleteMapping("/{project_task_id}")
+    @DeleteMapping("/{projectTaskId}")
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<GenericResponseModel> deleteProjectTask(@PathVariable String projectTaskId){
+    public ResponseEntity<GenericResponseModel> deleteProjectTask(@PathVariable("projectTaskId") String projectTaskId){
         ProjectTaskDto projectTaskDto = projectTaskService.deleteProjectTaskById(UUID.fromString(projectTaskId));
         GenericResponseModel responseModel = new GenericResponseModel(200, projectTaskDto);
         return new ResponseEntity<GenericResponseModel>(responseModel, HttpStatus.OK);

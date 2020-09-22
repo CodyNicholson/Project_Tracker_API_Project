@@ -37,8 +37,8 @@ public class ProjectController {
     @GetMapping("/{projectId}")
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<GenericResponseModel> getProjectById(@PathVariable("projectId") String projectId){
-        ProjectDto project = projectService.getProjectById(UUID.fromString(projectId));
-        GenericResponseModel responseModel = new GenericResponseModel(200, project);
+        ProjectDto projectDto = projectService.getProjectById(UUID.fromString(projectId));
+        GenericResponseModel responseModel = new GenericResponseModel(200, projectDto);
         return new ResponseEntity<GenericResponseModel>(responseModel, HttpStatus.OK);
     }
 

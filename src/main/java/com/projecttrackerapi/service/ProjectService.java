@@ -8,6 +8,7 @@ import com.projecttrackerapi.models.DeleteProjectResponseModel;
 import com.projecttrackerapi.models.ProjectDto;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -27,15 +28,15 @@ public class ProjectService {
         if (project.getDescription() == null || project.getDescription().isEmpty()) {
             badRequestMessage += Constants.PROJECT_MUST_HAVE_DESCRIPTION;
         }
-        if (project.getStartDate() == null) {
-            badRequestMessage += Constants.PROJECT_MUST_HAVE_START_DATE;
-        }
         if (!badRequestMessage.isEmpty()) {
             throw new BadRequestException(badRequestMessage.trim(), null);
         }
 
         if (project.getId() == null) {
             project.setId(UUID.randomUUID());
+        }
+        if (project.getStartDate() == null) {
+            project.setStartDate(new Date());
         }
 
         return projectDao.saveOrUpdateProject(project);
