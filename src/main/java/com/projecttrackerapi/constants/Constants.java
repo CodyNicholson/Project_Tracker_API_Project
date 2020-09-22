@@ -23,7 +23,8 @@ public final class Constants {
 
     // Detailed Error Messages
     public static final String INVALID_JSON = "Invalid JSON sent in request.";
-    public static final String INVALID_PROJECT_ID_SENT = "Invalid projectId sent in request.";
+    public static final String INVALID_PROJECT_ID_SENT_IN_BODY = "Invalid projectId sent in request body.";
+    public static final String INVALID_ID_SENT_IN_PATH = "Invalid id sent in request path.";
     public static final String PROJECT_MUST_HAVE_NAME = "The project must have a name. ";
     public static final String PROJECT_MUST_HAVE_DESCRIPTION = "The project must have a description. ";
     public static final String PROJECT_MUST_HAVE_START_DATE = "The project must have a start date. ";
@@ -37,6 +38,7 @@ public final class Constants {
 
     // Special Case Error Flags
     public static final String CANNOT_DESERIALIZE_UUID_ERROR_MESSAGE = "UUID has to be represented by standard 36-char representation";
+    public static final String INVALID_UUID_STRING = "Invalid UUID string:";
 
     // Log Messages
     public static String saveOrUpdateProjectMessage(ProjectDto project) {

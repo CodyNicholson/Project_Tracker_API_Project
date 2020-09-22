@@ -1,6 +1,5 @@
 package com.projecttrackerapi.error;
 
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.projecttrackerapi.constants.Constants;
 import com.projecttrackerapi.error.restCustomExceptions.*;
 import org.slf4j.Logger;
@@ -8,7 +7,6 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
@@ -36,7 +34,7 @@ public class ControllerAdviceExceptionHandler extends ResponseEntityExceptionHan
             errorDetails = new ErrorResponseModel(
                     new Date(),
                     Constants.REST_BAD_REQUEST,
-                    Constants.INVALID_PROJECT_ID_SENT);
+                    Constants.INVALID_PROJECT_ID_SENT_IN_BODY);
         } else {
             errorDetails = new ErrorResponseModel(
                     new Date(),
@@ -83,14 +81,24 @@ public class ControllerAdviceExceptionHandler extends ResponseEntityExceptionHan
         return new ResponseEntity<ErrorResponseModel>(errorDetails, HttpStatus.CONFLICT);
     }
 
+    // IMPORTANT NOTE: This also covers invalid UUIDs sent as path parameters which
+    //  causes an internal server error that I translate to a Bad Request
     @ExceptionHandler(value = { InternalServerErrorException.class, RuntimeException.class })
     protected ResponseEntity<ErrorResponseModel> handleInternalServerError(Exception ex) {
         logger.info(Constants.REST_INTERNAL_SERVER_ERROR, ex);
 
-        ErrorResponseModel errorDetails = new ErrorResponseModel(
-                new Date(),
-                Constants.REST_INTERNAL_SERVER_ERROR,
-                ex.getMessage());
+        ErrorResponseModel errorDetails;
+        if (ex.getLocalizedMessage().contains(Constants.INVALID_UUID_STRING)) {
+            errorDetails = new ErrorResponseModel(
+                    new Date(),
+                    Constants.REST_BAD_REQUEST,
+                    Constants.INVALID_ID_SENT_IN_PATH);
+        } else {
+            errorDetails = new ErrorResponseModel(
+                    new Date(),
+                    Constants.REST_INTERNAL_SERVER_ERROR,
+                    ex.getMessage());
+        }
 
         return new ResponseEntity<ErrorResponseModel>(errorDetails, HttpStatus.INTERNAL_SERVER_ERROR);
     }

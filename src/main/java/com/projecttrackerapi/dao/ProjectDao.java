@@ -91,6 +91,10 @@ public class ProjectDao {
         return deletedProjectTaskDto;
     }
 
+    public List<ProjectTaskDto> findProjectTasksByProjectId(UUID projectId) {
+        return projectTaskEntitiesToDtos(projectTaskRepository.findAllByProjectId(projectId));
+    }
+
     private Project projectDtoToEntity(ProjectDto projectDto) {
         return modelMapper.map(projectDto, Project.class);
     }

@@ -60,6 +60,14 @@ public class ProjectTaskService {
         }
     }
 
+    public List<ProjectTaskDto> getProjectTasksByProjectId(UUID projectId) {
+        try {
+            return projectDao.findProjectTasksByProjectId(projectId);
+        } catch (IllegalArgumentException ex) {
+            throw new NotFoundException(Constants.PROJECT_TASK_NOT_FOUND, null);
+        }
+    }
+
     public ProjectTaskDto deleteProjectTaskById(UUID projectId) {
         try {
             return projectDao.deleteProjectTaskById(projectId);
