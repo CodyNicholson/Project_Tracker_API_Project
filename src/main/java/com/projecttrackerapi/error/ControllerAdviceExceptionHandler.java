@@ -57,7 +57,6 @@ public class ControllerAdviceExceptionHandler extends ResponseEntityExceptionHan
 
     @ExceptionHandler(value = { InternalServerErrorException.class, RuntimeException.class })
     protected ResponseEntity<ErrorResponseModel> handleInternalServerError(Exception ex) {
-
         logger.info(Constants.REST_INTERNAL_SERVER_ERROR, ex);
 
         ErrorResponseModel errorDetails = new ErrorResponseModel(
@@ -70,7 +69,6 @@ public class ControllerAdviceExceptionHandler extends ResponseEntityExceptionHan
 
     @ExceptionHandler(value = { ServiceUnavailableException.class, Exception.class })
     protected ResponseEntity<ErrorResponseModel> handleServiceUnavailableError(Exception ex) {
-
         logger.info(Constants.REST_SERVICE_UNAVAILABLE, ex);
 
         ErrorResponseModel errorDetails = new ErrorResponseModel(

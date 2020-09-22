@@ -3,9 +3,11 @@ package com.projecttrackerapi.service;
 import com.projecttrackerapi.constants.Constants;
 import com.projecttrackerapi.dao.ProjectDao;
 import com.projecttrackerapi.error.restCustomExceptions.BadRequestException;
+import com.projecttrackerapi.error.restCustomExceptions.NotFoundException;
 import com.projecttrackerapi.models.DeleteProjectResponseModel;
 import com.projecttrackerapi.models.ProjectDto;
 import org.springframework.stereotype.Service;
+
 import java.util.List;
 import java.util.UUID;
 
@@ -18,8 +20,18 @@ public class ProjectService {
     }
 
     public ProjectDto saveOrUpdateProject(ProjectDto project) {
+        String badRequestMessage = "";
         if (project.getName() == null || project.getName().isEmpty()) {
-            throw new BadRequestException(Constants.PROJECT_MUST_HAVE_NAME, null);
+            badRequestMessage += Constants.PROJECT_MUST_HAVE_NAME;
+        }
+        if (project.getDescription() == null || project.getDescription().isEmpty()) {
+            badRequestMessage += Constants.PROJECT_MUST_HAVE_DESCRIPTION;
+        }
+        if (project.getStartDate() == null) {
+            badRequestMessage += Constants.PROJECT_MUST_HAVE_START_DATE;
+        }
+        if (!badRequestMessage.isEmpty()) {
+            throw new BadRequestException(badRequestMessage.trim(), null);
         }
 
         if (project.getId() == null) {
@@ -34,10 +46,18 @@ public class ProjectService {
     }
 
     public ProjectDto getProjectById(UUID projectId) {
-        return projectDao.findProjectById(projectId);
+        try {
+            return projectDao.findProjectById(projectId);
+        } catch (IllegalArgumentException ex) {
+            throw new NotFoundException(Constants.PROJECT_NOT_FOUND, null);
+        }
     }
 
     public DeleteProjectResponseModel deleteProjectById(UUID projectId) {
-        return projectDao.deleteProject(projectId);
+        try {
+            return projectDao.deleteProject(projectId);
+        } catch (IllegalArgumentException ex) {
+            throw new NotFoundException(Constants.PROJECT_NOT_FOUND, null);
+        }
     }
 }

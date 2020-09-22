@@ -22,9 +22,15 @@ public final class Constants {
     public static final String REST_SERVICE_UNAVAILABLE = "503: Service Unavailable";
 
     // Detailed Error Messages
-    public static final String PROJECT_MUST_HAVE_NAME = "The project must have a name.";
+    public static final String PROJECT_MUST_HAVE_NAME = "The project must have a name. ";
+    public static final String PROJECT_MUST_HAVE_DESCRIPTION = "The project must have a description. ";
+    public static final String PROJECT_MUST_HAVE_START_DATE = "The project must have a start date. ";
     public static final String PROJECT_NOT_FOUND = "The project was not found.";
     public static final String PROJECT_FOR_TASK_NOT_FOUND = "The project for this task was not found.";
+    public static final String PROJECT_TASK_NOT_FOUND = "The project task was not found.";
+    public static final String PROJECT_TASK_MUST_HAVE_NAME = "The project task must have a name. ";
+    public static final String PROJECT_TASK_MUST_HAVE_DESCRIPTION = "The project task must have a description. ";
+    public static final String PROJECT_TASK_MUST_HAVE_ACCEPTANCE_CRITERIA = "The project task must have acceptance criteria. ";
 
     // Log Messages
     public static String saveOrUpdateProjectMessage(ProjectDto project) {

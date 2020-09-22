@@ -51,6 +51,11 @@ public class ProjectDao {
     @Transactional
     public DeleteProjectResponseModel deleteProject(UUID id){
         Project project = projectRepository.getById(id);
+
+        if (project == null) {
+            throw new NotFoundException(Constants.PROJECT_NOT_FOUND, null);
+        }
+
         List<ProjectTask> projectTasks = projectTaskRepository.deleteByProjectId(id);
         projectRepository.delete(project);
 
@@ -62,10 +67,6 @@ public class ProjectDao {
     }
 
     public ProjectTaskDto saveOrUpdateProjectTask(ProjectTaskDto projectTaskDto){
-        if(projectTaskDto.getStatus() == null || projectTaskDto.getStatus().isEmpty()){
-            projectTaskDto.setStatus(Constants.TODO_STATUS);
-        }
-
         logger.info(Constants.saveOrUpdateProjectTaskMessage(projectTaskDto));
         ProjectTask savedProjectTask = projectTaskRepository.save(projectTaskDtoToEntity(projectTaskDto));
         return projectTaskEntityToDto(savedProjectTask);
@@ -82,7 +83,7 @@ public class ProjectDao {
         return projectTaskEntityToDto(projectTaskRepository.getById(id));
     }
 
-    public ProjectTaskDto deleteProjectTasksByProjectId(UUID id){
+    public ProjectTaskDto deleteProjectTaskById(UUID id){
         ProjectTask projectTask = projectTaskRepository.getById(id);
         projectTaskRepository.delete(projectTask);
         ProjectTaskDto deletedProjectTaskDto = projectTaskEntityToDto(projectTask);
@@ -133,7 +134,6 @@ public class ProjectDao {
         projectRepository.save(project1);
         projectRepository.save(project2);
 
-        // create tasks
         ProjectTask task1 = new ProjectTask(project1.getId(), "name 1", "description 1", "AC 1", 3.0, "Status 1", null);
         ProjectTask task2 = new ProjectTask(project1.getId(), "name 2", "description 2", "AC 2", 1, "Status 2", null);
         ProjectTask task3 = new ProjectTask(project2.getId(), "name 3", "description 3", "AC 3", 8, "Status 3", "blocked");
