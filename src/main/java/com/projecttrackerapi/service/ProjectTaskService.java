@@ -19,6 +19,9 @@ public class ProjectTaskService {
 
     public ProjectTaskDto saveOrUpdateProjectTask(ProjectTaskDto projectTaskDto) {
         String badRequestMessage = "";
+        if (projectTaskDto.getProjectId() == null) {
+            badRequestMessage += Constants.PROJECT_TASK_MUST_HAVE_PROJECT_ID;
+        }
         if (projectTaskDto.getName() == null || projectTaskDto.getName().equals("")) {
             badRequestMessage += Constants.PROJECT_TASK_MUST_HAVE_NAME;
         }

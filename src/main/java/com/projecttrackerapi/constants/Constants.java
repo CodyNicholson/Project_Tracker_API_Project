@@ -28,6 +28,7 @@ public final class Constants {
     public static final String PROJECT_NOT_FOUND = "The project was not found.";
     public static final String PROJECT_FOR_TASK_NOT_FOUND = "The project for this task was not found.";
     public static final String PROJECT_TASK_NOT_FOUND = "The project task was not found.";
+    public static final String PROJECT_TASK_MUST_HAVE_PROJECT_ID = "The project task must have a project id. ";
     public static final String PROJECT_TASK_MUST_HAVE_NAME = "The project task must have a name. ";
     public static final String PROJECT_TASK_MUST_HAVE_DESCRIPTION = "The project task must have a description. ";
     public static final String PROJECT_TASK_MUST_HAVE_ACCEPTANCE_CRITERIA = "The project task must have acceptance criteria. ";
