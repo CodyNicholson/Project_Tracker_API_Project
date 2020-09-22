@@ -22,6 +22,8 @@ public final class Constants {
     public static final String REST_SERVICE_UNAVAILABLE = "503: Service Unavailable";
 
     // Detailed Error Messages
+    public static final String INVALID_JSON = "Invalid JSON sent in request.";
+    public static final String INVALID_PROJECT_ID_SENT = "Invalid projectId sent in request.";
     public static final String PROJECT_MUST_HAVE_NAME = "The project must have a name. ";
     public static final String PROJECT_MUST_HAVE_DESCRIPTION = "The project must have a description. ";
     public static final String PROJECT_MUST_HAVE_START_DATE = "The project must have a start date. ";
@@ -32,6 +34,9 @@ public final class Constants {
     public static final String PROJECT_TASK_MUST_HAVE_NAME = "The project task must have a name. ";
     public static final String PROJECT_TASK_MUST_HAVE_DESCRIPTION = "The project task must have a description. ";
     public static final String PROJECT_TASK_MUST_HAVE_ACCEPTANCE_CRITERIA = "The project task must have acceptance criteria. ";
+
+    // Special Case Error Flags
+    public static final String CANNOT_DESERIALIZE_UUID_ERROR_MESSAGE = "UUID has to be represented by standard 36-char representation";
 
     // Log Messages
     public static String saveOrUpdateProjectMessage(ProjectDto project) {

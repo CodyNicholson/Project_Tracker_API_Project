@@ -22,7 +22,7 @@ public class ProjectTaskController {
 
     @PostMapping("/")
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<GenericResponseModel> addProjectTaskToBoard(@RequestBody ProjectTaskDto projectTaskDto){
+    public ResponseEntity<GenericResponseModel> addProjectTaskToBoard(@RequestBody(required = false) ProjectTaskDto projectTaskDto){
         ProjectTaskDto newProjectTaskDto = projectTaskService.saveOrUpdateProjectTask(projectTaskDto);
         GenericResponseModel responseModel = new GenericResponseModel(201, newProjectTaskDto);
         return new ResponseEntity<GenericResponseModel>(responseModel, HttpStatus.CREATED);

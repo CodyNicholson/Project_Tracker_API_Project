@@ -1,12 +1,17 @@
 package com.projecttrackerapi.error;
 
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.projecttrackerapi.constants.Constants;
 import com.projecttrackerapi.error.restCustomExceptions.*;
 import org.slf4j.Logger;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import java.util.Date;
@@ -17,6 +22,29 @@ public class ControllerAdviceExceptionHandler extends ResponseEntityExceptionHan
 
     public ControllerAdviceExceptionHandler(Logger logger) {
         this.logger = logger;
+    }
+
+    @Override
+    protected ResponseEntity<Object> handleHttpMessageNotReadable(HttpMessageNotReadableException ex,
+                                                                  HttpHeaders headers,
+                                                                  HttpStatus status,
+                                                                  WebRequest request) {
+        logger.error(Constants.REST_BAD_REQUEST, ex);
+
+        ErrorResponseModel errorDetails;
+        if (ex.getLocalizedMessage().contains(Constants.CANNOT_DESERIALIZE_UUID_ERROR_MESSAGE)) {
+            errorDetails = new ErrorResponseModel(
+                    new Date(),
+                    Constants.REST_BAD_REQUEST,
+                    Constants.INVALID_PROJECT_ID_SENT);
+        } else {
+            errorDetails = new ErrorResponseModel(
+                    new Date(),
+                    Constants.REST_BAD_REQUEST,
+                    Constants.INVALID_JSON);
+        }
+
+        return new ResponseEntity<Object>(errorDetails, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(value = { BadRequestException.class })
