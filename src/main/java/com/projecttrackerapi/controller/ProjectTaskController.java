@@ -1,6 +1,5 @@
 package com.projecttrackerapi.controller;
 
-import com.projecttrackerapi.entities.ProjectTask;
 import com.projecttrackerapi.models.GenericResponseModel;
 import com.projecttrackerapi.models.ProjectTaskDto;
 import com.projecttrackerapi.service.ProjectTaskService;
@@ -8,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 import java.util.UUID;
 
@@ -22,7 +20,7 @@ public class ProjectTaskController {
 
     @PostMapping("/")
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<GenericResponseModel> addProjectTaskToBoard(@RequestBody(required = false) ProjectTaskDto projectTaskDto){
+    public ResponseEntity<GenericResponseModel> addProjectTaskToBoard(@RequestBody ProjectTaskDto projectTaskDto){
         ProjectTaskDto newProjectTaskDto = projectTaskService.saveOrUpdateProjectTask(projectTaskDto);
         GenericResponseModel responseModel = new GenericResponseModel(201, newProjectTaskDto);
         return new ResponseEntity<GenericResponseModel>(responseModel, HttpStatus.CREATED);

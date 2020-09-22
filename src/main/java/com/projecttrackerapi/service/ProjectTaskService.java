@@ -40,7 +40,7 @@ public class ProjectTaskService {
         }
 
         try {
-            projectDao.findProjectById(projectTaskDto.getId());
+            projectDao.findProjectById(projectTaskDto.getProjectId());
         } catch (IllegalArgumentException ex) {
             throw new NotFoundException(Constants.PROJECT_FOR_TASK_NOT_FOUND, null);
         }
