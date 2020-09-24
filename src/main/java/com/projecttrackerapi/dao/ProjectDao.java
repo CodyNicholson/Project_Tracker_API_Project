@@ -135,12 +135,12 @@ public class ProjectDao {
         Project projectTrackingProject = new Project(UUID.randomUUID(), "Project Tracking App", "An application I created to track all of my side projects", new Date(), null, "deployedLink1", "docLink1", "codeLink1");
         Project issTrackingProject = new Project(UUID.randomUUID(), "ISS Tracking App", "description2", new Date(), null, "deployedLink2", "docLink2", "codeLink2");
         Project battleApp = new Project(UUID.randomUUID(), "Battle App", "description2", new Date(), null, "deployedLink2", "docLink2", "codeLink2");
-        Project projectDesignerProject = new Project(UUID.randomUUID(), "Project Designer App", "description2", new Date(), null, "deployedLink2", "docLink2", "codeLink2");
+        Project projectDesignerProject = new Project(UUID.randomUUID(), "Project Designer App", "A remodel of drawio", new Date(), null, "deployedLink2", "docLink2", "codeLink2");
         Project tronApp = new Project(UUID.randomUUID(), "Tron App", "description2", new Date(), null, "deployedLink2", "docLink2", "codeLink2");
         Project bloggingApp = new Project(UUID.randomUUID(), "Blogging App", "description2", new Date(), null, "deployedLink2", "docLink2", "codeLink2");
         Project selfDrivingCarProjectWebsite = new Project(UUID.randomUUID(), "Self Driving Car Project Website", "description2", new Date(), null, "deployedLink2", "docLink2", "codeLink2");
         Project clnGithubIoProject = new Project(UUID.randomUUID(), "CodyNicholson.github.io", "description2", new Date(), null, "deployedLink2", "docLink2", "codeLink2");
-        Project portfolioWebsite = new Project(UUID.randomUUID(), "Portfolio Website", "description2", new Date(), null, "deployedLink2", "docLink2", "codeLink2");
+        Project portfolioWebsite = new Project(UUID.randomUUID(), "Portfolio Website", "My portfolio website on Heroku!", new Date(), null, "deployedLink2", "docLink2", "codeLink2");
         Project springBootKafkaProject = new Project(UUID.randomUUID(), "Spring Boot Kafka Project", "description2", new Date(), null, "deployedLink2", "docLink2", "codeLink2");
         Project fastStyleTransferProject = new Project(UUID.randomUUID(), "Fast Style Transfer Project", "description2", new Date(), null, "deployedLink2", "docLink2", "codeLink2");
         Project rixusProject = new Project(UUID.randomUUID(), "Rixus Project", "Voice operated personal assistant - maybe built using Flutter?", new Date(), null, "deployedLink2", "docLink2", "codeLink2");
@@ -150,7 +150,7 @@ public class ProjectDao {
         Project enodoProject = new Project(UUID.randomUUID(), "Enodo Project", "description2", new Date(), null, "deployedLink2", "docLink2", "codeLink2");
         Project multiplayerTetrisProject = new Project(UUID.randomUUID(), "Multiplayer Tetris Project", "description2", new Date(), null, "deployedLink2", "docLink2", "codeLink2");
         Project memeCreatorProject = new Project(UUID.randomUUID(), "Meme Creator Project", "description2", new Date(), null, "deployedLink2", "docLink2", "codeLink2");
-        Project starshotRicochetProject = new Project(UUID.randomUUID(), "Starshot Ricochet Project", "description2", new Date(), null, "deployedLink2", "docLink2", "codeLink2");
+        Project starshotRicochetProject = new Project(UUID.randomUUID(), "Starshot Ricochet Project", "The web based implementation of Benny Breakout's adventure to save the world", new Date(), null, "deployedLink2", "docLink2", "codeLink2");
         Project findingLaneLinesProject = new Project(UUID.randomUUID(), "Finding Lane Lines Project", "description2", new Date(), null, "deployedLink2", "docLink2", "codeLink2");
         Project trafficSignClassifierProject = new Project(UUID.randomUUID(), "Traffic Sign Classifier Project", "description2", new Date(), null, "deployedLink2", "docLink2", "codeLink2");
         Project behavioralCloningProject = new Project(UUID.randomUUID(), "Behavioral Cloning Project", "description2", new Date(), null, "deployedLink2", "docLink2", "codeLink2");
@@ -161,6 +161,8 @@ public class ProjectDao {
         Project kidnappedVehicleProject = new Project(UUID.randomUUID(), "Kidnapped Vehicle Project", "description2", new Date(), null, "deployedLink2", "docLink2", "codeLink2");
         Project pidControllerProject = new Project(UUID.randomUUID(), "PID Controller Project", "description2", new Date(), null, "deployedLink2", "docLink2", "codeLink2");
         Project modelPredictiveControllerProject = new Project(UUID.randomUUID(), "Model Predictive Controller Project", "description2", new Date(), null, "deployedLink2", "docLink2", "codeLink2");
+        Project ecommerceProject = new Project(UUID.randomUUID(), "VueJS e-Commerce Platform w/ Stripe integration", "description2", new Date(), null, "deployedLink2", "docLink2", "codeLink2");
+        Project seleniumAutomatedTestingFramework = new Project(UUID.randomUUID(), "Selenium Automated Testing Framework", "description2", new Date(), null, "deployedLink2", "docLink2", "codeLink2");
 
         projectRepository.save(projectTrackingProject);
         projectRepository.save(issTrackingProject);
@@ -180,5 +182,9 @@ public class ProjectDao {
         projectTaskRepository.save(task3);
         projectTaskRepository.save(task4);
         projectTaskRepository.save(task5);
+        projectTaskRepository.save(task6);
+        projectTaskRepository.save(task7);
+        projectTaskRepository.save(task8);
+        projectTaskRepository.save(task9);
     }
 }
