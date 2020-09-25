@@ -163,6 +163,7 @@ public class ProjectDao {
         Project modelPredictiveControllerProject = new Project(UUID.randomUUID(), "Model Predictive Controller Project", "description2", new Date(), null, "deployedLink2", "docLink2", "codeLink2");
         Project ecommerceProject = new Project(UUID.randomUUID(), "VueJS e-Commerce Platform w/ Stripe integration", "description2", new Date(), null, "deployedLink2", "docLink2", "codeLink2");
         Project seleniumAutomatedTestingFramework = new Project(UUID.randomUUID(), "Selenium Automated Testing Framework", "description2", new Date(), null, "deployedLink2", "docLink2", "codeLink2");
+        Project collectiveKnowledgeProject = new Project(UUID.randomUUID(), "Collective Knowledge Project", "description2", new Date(), null, "deployedLink2", "docLink2", "codeLink2");
 
         projectRepository.save(projectTrackingProject);
         projectRepository.save(issTrackingProject);
