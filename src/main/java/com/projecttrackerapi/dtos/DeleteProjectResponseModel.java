@@ -1,4 +1,4 @@
-package com.projecttrackerapi.models;
+package com.projecttrackerapi.dtos;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

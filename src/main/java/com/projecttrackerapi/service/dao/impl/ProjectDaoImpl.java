@@ -1,4 +1,4 @@
-package com.projecttrackerapi.dao;
+package com.projecttrackerapi.service.dao.impl;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -7,11 +7,12 @@ import com.projecttrackerapi.entities.Project;
 import com.projecttrackerapi.entities.ProjectTask;
 import com.projecttrackerapi.error.restCustomExceptions.BadRequestException;
 import com.projecttrackerapi.error.restCustomExceptions.NotFoundException;
-import com.projecttrackerapi.models.DeleteProjectResponseModel;
-import com.projecttrackerapi.models.ProjectDto;
-import com.projecttrackerapi.models.ProjectTaskDto;
+import com.projecttrackerapi.dtos.DeleteProjectResponseModel;
+import com.projecttrackerapi.dtos.ProjectDto;
+import com.projecttrackerapi.dtos.ProjectTaskDto;
 import com.projecttrackerapi.repository.ProjectRepository;
 import com.projecttrackerapi.repository.ProjectTaskRepository;
+import com.projecttrackerapi.service.dao.ProjectDao;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,7 +21,7 @@ import javax.transaction.Transactional;
 import java.util.*;
 
 @Service
-public class ProjectDao {
+public class ProjectDaoImpl implements ProjectDao {
     @Autowired
     private ProjectRepository projectRepository;
 
@@ -30,19 +31,16 @@ public class ProjectDao {
     @Autowired
     private ObjectMapper objectMapper;
 
-    private final Logger logger;
+    @Autowired
+    private Logger logger;
 
-    public ProjectDao(Logger logger) {
-        this.logger = logger;
-    }
-
-    public ProjectDto saveOrUpdateProject(ProjectDto project){
+    public ProjectDto saveOrUpdateProject(ProjectDto project) {
         logger.info(Constants.saveOrUpdateProjectMessage(project));
         Project savedProject = projectRepository.save(projectDtoToEntity(project));
         return projectEntityToDto(savedProject);
     }
 
-    public List<ProjectDto> findAllProjects(){
+    public List<ProjectDto> findAllProjects() {
         return projectEntitiesToDtos(projectRepository.findAll());
     }
 

@@ -1,9 +1,9 @@
 package com.projecttrackerapi.controller;
 
-import com.projecttrackerapi.models.DeleteProjectResponseModel;
-import com.projecttrackerapi.models.GenericResponseModel;
-import com.projecttrackerapi.models.ProjectDto;
-import com.projecttrackerapi.service.ProjectService;
+import com.projecttrackerapi.dtos.DeleteProjectResponseModel;
+import com.projecttrackerapi.dtos.GenericResponseModel;
+import com.projecttrackerapi.dtos.ProjectDto;
+import com.projecttrackerapi.service.project.impl.ProjectServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,7 +16,7 @@ import java.util.UUID;
 public class ProjectController {
 
     @Autowired
-    private ProjectService projectService;
+    private ProjectServiceImpl projectService;
 
     @PostMapping("/")
     @ResponseStatus(HttpStatus.CREATED)

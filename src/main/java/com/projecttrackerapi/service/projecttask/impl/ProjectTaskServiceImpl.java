@@ -1,19 +1,20 @@
-package com.projecttrackerapi.service;
+package com.projecttrackerapi.service.projecttask.impl;
 
 import com.projecttrackerapi.constants.Constants;
-import com.projecttrackerapi.dao.ProjectDao;
+import com.projecttrackerapi.service.dao.impl.ProjectDaoImpl;
 import com.projecttrackerapi.error.restCustomExceptions.BadRequestException;
 import com.projecttrackerapi.error.restCustomExceptions.NotFoundException;
-import com.projecttrackerapi.models.ProjectTaskDto;
+import com.projecttrackerapi.dtos.ProjectTaskDto;
+import com.projecttrackerapi.service.projecttask.ProjectTaskService;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.UUID;
 
 @Service
-public class ProjectTaskService {
-    private final ProjectDao projectDao;
+public class ProjectTaskServiceImpl implements ProjectTaskService {
+    private final ProjectDaoImpl projectDao;
 
-    public ProjectTaskService(ProjectDao projectDao) {
+    public ProjectTaskServiceImpl(ProjectDaoImpl projectDao) {
         this.projectDao = projectDao;
     }
 

@@ -1,8 +1,8 @@
 package com.projecttrackerapi.controller;
 
-import com.projecttrackerapi.models.GenericResponseModel;
-import com.projecttrackerapi.models.ProjectTaskDto;
-import com.projecttrackerapi.service.ProjectTaskService;
+import com.projecttrackerapi.dtos.GenericResponseModel;
+import com.projecttrackerapi.dtos.ProjectTaskDto;
+import com.projecttrackerapi.service.projecttask.impl.ProjectTaskServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,7 +16,7 @@ import java.util.UUID;
 public class ProjectTaskController {
 
     @Autowired
-    private ProjectTaskService projectTaskService;
+    private ProjectTaskServiceImpl projectTaskService;
 
     @PostMapping("/")
     @ResponseStatus(HttpStatus.CREATED)

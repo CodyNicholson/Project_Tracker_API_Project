@@ -1,9 +1,7 @@
 package com.projecttrackerapi.constants;
 
-import com.projecttrackerapi.entities.Project;
-import com.projecttrackerapi.entities.ProjectTask;
-import com.projecttrackerapi.models.ProjectDto;
-import com.projecttrackerapi.models.ProjectTaskDto;
+import com.projecttrackerapi.dtos.ProjectDto;
+import com.projecttrackerapi.dtos.ProjectTaskDto;
 
 import java.util.Date;
 import java.util.List;
