@@ -1,15 +1,17 @@
 package com.projecttrackerapi.dao;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.projecttrackerapi.constants.Constants;
 import com.projecttrackerapi.entities.Project;
 import com.projecttrackerapi.entities.ProjectTask;
+import com.projecttrackerapi.error.restCustomExceptions.BadRequestException;
 import com.projecttrackerapi.error.restCustomExceptions.NotFoundException;
 import com.projecttrackerapi.models.DeleteProjectResponseModel;
 import com.projecttrackerapi.models.ProjectDto;
 import com.projecttrackerapi.models.ProjectTaskDto;
 import com.projecttrackerapi.repository.ProjectRepository;
 import com.projecttrackerapi.repository.ProjectTaskRepository;
-import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,7 +28,7 @@ public class ProjectDao {
     private ProjectTaskRepository projectTaskRepository;
 
     @Autowired
-    private ModelMapper modelMapper;
+    private ObjectMapper objectMapper;
 
     private final Logger logger;
 
@@ -96,19 +98,39 @@ public class ProjectDao {
     }
 
     private Project projectDtoToEntity(ProjectDto projectDto) {
-        return modelMapper.map(projectDto, Project.class);
+        try {
+            return objectMapper.readValue(projectDto.toString(), Project.class);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+            throw new BadRequestException(Constants.INVALID_JSON, e);
+        }
     }
 
     private ProjectTask projectTaskDtoToEntity(ProjectTaskDto projectTaskDto) {
-        return modelMapper.map(projectTaskDto, ProjectTask.class);
+        try {
+            return objectMapper.readValue(projectTaskDto.toString(), ProjectTask.class);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+            throw new BadRequestException(Constants.INVALID_JSON, e);
+        }
     }
 
     private ProjectDto projectEntityToDto(Project project) {
-        return modelMapper.map(project, ProjectDto.class);
+        try {
+            return objectMapper.readValue(project.toString(), ProjectDto.class);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+            throw new BadRequestException(Constants.INVALID_JSON, e);
+        }
     }
 
     private ProjectTaskDto projectTaskEntityToDto(ProjectTask projectTask) {
-        return modelMapper.map(projectTask, ProjectTaskDto.class);
+        try {
+            return objectMapper.readValue(projectTask.toString(), ProjectTaskDto.class);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+            throw new BadRequestException(Constants.INVALID_JSON, e);
+        }
     }
 
     private List<ProjectTaskDto> projectTaskEntitiesToDtos(List<ProjectTask> projectTasks) {
