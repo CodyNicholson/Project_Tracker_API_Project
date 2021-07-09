@@ -1,7 +1,7 @@
 spring:
   profiles: LOCAL, default, test
   datasource:
-    url: jdbc:postgresql://192.168.99.100:5432/d303tt7dgo2ndl
+    url:
     username: fxvjpyhzcgofew
     password: ${PSQL_PASSWORD:defaultPassword}
   hikari:
@@ -14,20 +14,13 @@ spring:
     properties:
       hibernate:
       dialect: org.hibernate.dialect.PostgreSQLDialect
-#      javax:
-#        persistence:
-#          schema-generation:
-#            scripts:
-#              action: create
-#              create-target: src/main/resources/db/schema.sql
-#              create-source: metadata
-#  flyway:
-#    url: jdbc:postgresql://192.168.99.100:5432/d303tt7dgo2ndl
-#    user: fxvjpyhzcgofew
-#    password: ${PSQL_PASSWORD:defaultPassword}
-#    baseline-on-migrate: true
-#    validate-on-migrate: true
-#    schemas: public
+  flyway:
+    url: jdbc:postgresql://ec2-54-161-58-21.compute-1.amazonaws.com:5432/d303tt7dgo2ndl?currentSchema=public
+    schemas: ["public"]
+    user: fxvjpyhzcgofew
+    password: ${PSQL_PASSWORD:defaultPassword}
+    baseline-on-migrate: true
+# docker-compose local db url = jdbc:postgresql://192.168.99.100:5432/d303tt7dgo2ndl?currentSchema=public
 ---
 spring:
   profiles: PROD
@@ -45,10 +38,9 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
-#  flyway:
-#    url: jdbc:postgresql://ec2-54-161-58-21.compute-1.amazonaws.com:5432/d303tt7dgo2ndl
-#    user: fxvjpyhzcgofew
-#    password: ${PSQL_PASSWORD:defaultPassword}
-#    baseline-on-migrate: true
-#    validate-on-migrate: true
-#    schemas: public
+  flyway:
+    url: jdbc:postgresql://ec2-54-161-58-21.compute-1.amazonaws.com:5432/d303tt7dgo2ndl?currentSchema=public
+    schemas: [ "public" ]
+    user: fxvjpyhzcgofew
+    password: ${PSQL_PASSWORD:defaultPassword}
+    baseline-on-migrate: true

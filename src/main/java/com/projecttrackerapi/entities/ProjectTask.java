@@ -11,6 +11,7 @@ import java.util.UUID;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Table(name = "projecttask")
 public class ProjectTask {
     @Id
     @Type(type = "pg-uuid")
@@ -20,13 +21,14 @@ public class ProjectTask {
             strategy = "org.hibernate.id.UUIDGenerator"
     )
     @Column(name = "id", updatable = false, nullable = false)
-    private UUID projectId;
+    private UUID id;
     private String name;
     private String description;
-    private String acceptanceCriteria;
+    private String acceptance_criteria;
     private double points;
     private String status;
-    private String blockers;
+
+    @ManyToOne
+    @JoinColumn(name="project_id", nullable=false)
+    private Project project;
 }
-
-

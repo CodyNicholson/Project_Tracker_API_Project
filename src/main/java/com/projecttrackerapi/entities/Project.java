@@ -2,22 +2,20 @@ package com.projecttrackerapi.entities;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Type;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Table(name = "project")
 public class Project {
     @Id
     @Type(type = "pg-uuid")
@@ -30,9 +28,12 @@ public class Project {
     private UUID id;
     private String name;
     private String description;
-    private Date startDate;
-    private Date endDate;
-    private String deployedLink;
-    private String documentationLink;
+    private Date start_date;
+    private Date end_date;
+    private String deployed_link;
+    private String documentation_link;
     private String codeLink;
+
+    @OneToMany(mappedBy = "project")
+    private List<ProjectTask> projectTasks;
 }

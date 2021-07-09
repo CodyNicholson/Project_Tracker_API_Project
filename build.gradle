@@ -2,6 +2,7 @@ plugins {
     id 'org.springframework.boot' version '2.3.3.RELEASE'
     id 'io.spring.dependency-management' version '1.0.10.RELEASE'
     id 'io.franzbecker.gradle-lombok' version '4.0.0'
+    id "org.flywaydb.flyway" version "7.5.1"  //NOTE: Flyway is used for database migration management
     id 'java'
 }
 
@@ -13,13 +14,21 @@ repositories {
     mavenCentral()
 }
 
+flyway {
+    url = 'jdbc:postgresql://ec2-54-161-58-21.compute-1.amazonaws.com:5432/d303tt7dgo2ndl?currentSchema=public'
+    user = 'fxvjpyhzcgofew'
+    password = '3c6ab7a6505c21fb0b57a95fa7fc16449c83884a237ce7505b43ac09570d2344'
+    schemas = ['public']
+}
+
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-data-rest'
-    implementation 'javax.validation:validation-api:2.0.0.Final'
+    implementation "org.springdoc:springdoc-openapi-ui:1.2.24" //NOTE: For swagger-ui
     implementation 'org.projectlombok:lombok:1.16.16'
-//    implementation 'org.flywaydb:flyway-core'
+    implementation 'org.flywaydb:flyway-core'
+    implementation 'javax.validation:validation-api:2.0.0.Final'
 
     runtime 'org.springframework.boot:spring-boot-devtools'
     runtime 'org.postgresql:postgresql:42.2.13'
