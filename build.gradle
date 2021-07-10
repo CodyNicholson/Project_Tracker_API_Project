@@ -9,16 +9,9 @@ plugins {
 group = 'com.projecttrackerapi'
 version = '0.0.1'
 sourceCompatibility = '11'
-
+1
 repositories {
     mavenCentral()
-}
-
-flyway {
-    url = 'jdbc:postgresql://ec2-54-161-58-21.compute-1.amazonaws.com:5432/d303tt7dgo2ndl?currentSchema=public'
-    user = 'fxvjpyhzcgofew'
-    password = '3c6ab7a6505c21fb0b57a95fa7fc16449c83884a237ce7505b43ac09570d2344'
-    schemas = ['public']
 }
 
 dependencies {

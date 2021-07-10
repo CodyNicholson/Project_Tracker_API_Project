@@ -1,9 +1,9 @@
 spring:
   profiles: LOCAL, default, test
   datasource:
-    url:
-    username: fxvjpyhzcgofew
-    password: ${PSQL_PASSWORD:defaultPassword}
+    url: ${DB_CONNECTION_STRING:defaultDbConnectionString}
+    username: ${DB_USER:defaultDbUser}
+    password: ${DB_PASSWORD:defaultPassword}
   hikari:
     minimum-idle: 2
     maximum-pool-size: 4
@@ -15,19 +15,19 @@ spring:
       hibernate:
       dialect: org.hibernate.dialect.PostgreSQLDialect
   flyway:
-    url: jdbc:postgresql://ec2-54-161-58-21.compute-1.amazonaws.com:5432/d303tt7dgo2ndl?currentSchema=public
+    url: ${DB_CONNECTION_STRING:defaultDbConnectionString}
+    user: ${DB_USER:defaultDbUser}
+    password: ${DB_PASSWORD:defaultDbPassword}
     schemas: ["public"]
-    user: fxvjpyhzcgofew
-    password: ${PSQL_PASSWORD:defaultPassword}
     baseline-on-migrate: true
 # docker-compose local db url = jdbc:postgresql://192.168.99.100:5432/d303tt7dgo2ndl?currentSchema=public
 ---
 spring:
   profiles: PROD
   datasource:
-    url: jdbc:postgresql://ec2-54-161-58-21.compute-1.amazonaws.com:5432/d303tt7dgo2ndl?currentSchema=public
-    username: fxvjpyhzcgofew
-    password: ${PSQL_PASSWORD:defaultPassword}
+    url: ${DB_CONNECTION_STRING:defaultDbConnectionString}
+    username: ${DB_USER:defaultDbUser}
+    password: ${DB_PASSWORD:defaultDbPassword}
   hikari:
     minimum-idle: 2
     maximum-pool-size: 4
@@ -39,8 +39,8 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
   flyway:
-    url: jdbc:postgresql://ec2-54-161-58-21.compute-1.amazonaws.com:5432/d303tt7dgo2ndl?currentSchema=public
+    url: ${DB_CONNECTION_STRING:defaultDbConnectionString}
+    user: ${DB_USER:defaultDbUser}
+    password: ${DB_PASSWORD:defaultDbPassword}
     schemas: [ "public" ]
-    user: fxvjpyhzcgofew
-    password: ${PSQL_PASSWORD:defaultPassword}
     baseline-on-migrate: true
