@@ -1,15 +1,11 @@
 package com.projecttrackerapi;
 
-import com.projecttrackerapi.entities.Project;
 import com.projecttrackerapi.entities.ProjectTask;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
-
-import java.util.Date;
-import java.util.UUID;
 
 import static junit.framework.TestCase.assertTrue;
 

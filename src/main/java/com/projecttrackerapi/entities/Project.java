@@ -2,24 +2,38 @@ package com.projecttrackerapi.entities;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import javax.persistence.Entity;
+import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Type;
+
+import javax.persistence.*;
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
-@EqualsAndHashCode(callSuper = true)
 @Entity
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Project extends EntityWithUUID {
+@Table(name = "project")
+public class Project {
+    @Id
+    @Type(type = "pg-uuid")
+    @GeneratedValue(generator = "UUID")
+    @GenericGenerator(
+            name = "UUID",
+            strategy = "org.hibernate.id.UUIDGenerator"
+    )
+    @Column(name = "id", updatable = false, nullable = false)
     private UUID id;
     private String name;
     private String description;
-    private Date startDate;
-    private Date endDate;
-    private String deployedLink;
-    private String documentationLink;
+    private Date start_date;
+    private Date end_date;
+    private String deployed_link;
+    private String documentation_link;
     private String codeLink;
+
+    @OneToMany(mappedBy = "project")
+    private List<ProjectTask> projectTasks;
 }

@@ -1,54 +1,44 @@
 spring:
   profiles: LOCAL, default, test
   datasource:
-    url: jdbc:postgresql://192.168.99.100:5432/d303tt7dgo2ndl
-    username: fxvjpyhzcgofew
-    password: ${PSQL_PASSWORD:defaultPassword}
-  hikari:
-    minimum-idle: 2
-    maximum-pool-size: 4
-  jpa:
-    database: postgresql
-    hibernate:
-      ddl-auto: create
-    properties:
+    url: ${DB_CONNECTION_STRING:defaultDbConnectionString}
+    username: ${DB_USER:defaultDbUser}
+    password: ${DB_PASSWORD:defaultPassword}
+    initialization-mode: always
+    hikari:
+      minimum-idle: 2
+      maximum-pool-size: 4
+    jpa:
+      database: postgresql
       hibernate:
-      dialect: org.hibernate.dialect.PostgreSQLDialect
-#      javax:
-#        persistence:
-#          schema-generation:
-#            scripts:
-#              action: create
-#              create-target: src/main/resources/db/schema.sql
-#              create-source: metadata
-#  flyway:
-#    url: jdbc:postgresql://192.168.99.100:5432/d303tt7dgo2ndl
-#    user: fxvjpyhzcgofew
-#    password: ${PSQL_PASSWORD:defaultPassword}
-#    baseline-on-migrate: true
-#    validate-on-migrate: true
-#    schemas: public
+        ddl-auto: create
+      properties:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+flyway:
+  url: ${DB_CONNECTION_STRING:defaultDbConnectionString}
+  user: ${DB_USER:defaultDbUser}
+  password: ${DB_PASSWORD:defaultDbPassword}
+  schemas: ["public"]
+# docker-compose local db url = jdbc:postgresql://192.168.99.100:5432/d303tt7dgo2ndl?currentSchema=public
 ---
 spring:
   profiles: PROD
   datasource:
-    url: jdbc:postgresql://ec2-54-161-58-21.compute-1.amazonaws.com:5432/d303tt7dgo2ndl?currentSchema=public
-    username: fxvjpyhzcgofew
-    password: ${PSQL_PASSWORD:defaultPassword}
-  hikari:
-    minimum-idle: 2
-    maximum-pool-size: 4
-  jpa:
-    database: postgresql
-    hibernate:
-      ddl-auto: create
-    properties:
+    url: ${DB_CONNECTION_STRING:defaultDbConnectionString}
+    username: ${DB_USER:defaultDbUser}
+    password: ${DB_PASSWORD:defaultDbPassword}
+    initialization-mode: always
+    hikari:
+      minimum-idle: 2
+      maximum-pool-size: 4
+    jpa:
+      database: postgresql
       hibernate:
+        ddl-auto: create
+      properties:
         dialect: org.hibernate.dialect.PostgreSQLDialect
-#  flyway:
-#    url: jdbc:postgresql://ec2-54-161-58-21.compute-1.amazonaws.com:5432/d303tt7dgo2ndl
-#    user: fxvjpyhzcgofew
-#    password: ${PSQL_PASSWORD:defaultPassword}
-#    baseline-on-migrate: true
-#    validate-on-migrate: true
-#    schemas: public
+flyway:
+  url: ${DB_CONNECTION_STRING:defaultDbConnectionString}
+  user: ${DB_USER:defaultDbUser}
+  password: ${DB_PASSWORD:defaultDbPassword}
+  schemas: [ "public" ]

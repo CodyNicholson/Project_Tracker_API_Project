@@ -2,13 +2,14 @@ plugins {
     id 'org.springframework.boot' version '2.3.3.RELEASE'
     id 'io.spring.dependency-management' version '1.0.10.RELEASE'
     id 'io.franzbecker.gradle-lombok' version '4.0.0'
+    id "org.flywaydb.flyway" version "7.5.1"  //NOTE: Flyway is used for database migration management
     id 'java'
 }
 
 group = 'com.projecttrackerapi'
-version = '0.0.1-SNAPSHOT'
-sourceCompatibility = '1.8'
-
+version = '0.0.1'
+sourceCompatibility = '11'
+1
 repositories {
     mavenCentral()
 }
@@ -17,11 +18,10 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-data-rest'
-    implementation 'org.springframework.kafka:spring-kafka'
-    implementation 'javax.validation:validation-api:2.0.0.Final'
+    implementation "org.springdoc:springdoc-openapi-ui:1.2.24" //NOTE: For swagger-ui
     implementation 'org.projectlombok:lombok:1.16.16'
-    implementation 'org.modelmapper:modelmapper:2.3.5'
-//    implementation 'org.flywaydb:flyway-core'
+    implementation 'org.flywaydb:flyway-core'
+    implementation 'javax.validation:validation-api:2.0.0.Final'
 
     runtime 'org.springframework.boot:spring-boot-devtools'
     runtime 'org.postgresql:postgresql:42.2.13'
@@ -30,7 +30,6 @@ dependencies {
         exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
     }
 
-    testImplementation 'org.springframework.kafka:spring-kafka-test'
     testImplementation 'org.junit.platform:junit-platform-runner:1.2.0'
     testImplementation 'org.mockito:mockito-junit-jupiter:3.0.0'
     testImplementation 'org.mockito:mockito-core:3.0.0'

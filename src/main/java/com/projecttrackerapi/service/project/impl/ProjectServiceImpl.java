@@ -1,11 +1,11 @@
-package com.projecttrackerapi.service;
+package com.projecttrackerapi.service.project.impl;
 
 import com.projecttrackerapi.constants.Constants;
-import com.projecttrackerapi.dao.ProjectDao;
+import com.projecttrackerapi.service.dao.impl.ProjectDaoImpl;
 import com.projecttrackerapi.error.restCustomExceptions.BadRequestException;
 import com.projecttrackerapi.error.restCustomExceptions.NotFoundException;
-import com.projecttrackerapi.models.DeleteProjectResponseModel;
-import com.projecttrackerapi.models.ProjectDto;
+import com.projecttrackerapi.dtos.ProjectDto;
+import com.projecttrackerapi.service.project.ProjectService;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -13,10 +13,10 @@ import java.util.List;
 import java.util.UUID;
 
 @Service
-public class ProjectService {
-    private final ProjectDao projectDao;
+public class ProjectServiceImpl implements ProjectService {
+    private final ProjectDaoImpl projectDao;
 
-    public ProjectService(ProjectDao projectDao) {
+    public ProjectServiceImpl(ProjectDaoImpl projectDao) {
         this.projectDao = projectDao;
     }
 
@@ -32,11 +32,8 @@ public class ProjectService {
             throw new BadRequestException(badRequestMessage.trim(), null);
         }
 
-        if (project.getId() == null) {
-            project.setId(UUID.randomUUID());
-        }
-        if (project.getStartDate() == null) {
-            project.setStartDate(new Date());
+        if (project.getStart_date() == null) {
+            project.setStart_date(new Date());
         }
 
         return projectDao.saveOrUpdateProject(project);
@@ -47,18 +44,10 @@ public class ProjectService {
     }
 
     public ProjectDto getProjectById(UUID projectId) {
-        try {
-            return projectDao.findProjectById(projectId);
-        } catch (IllegalArgumentException ex) {
-            throw new NotFoundException(Constants.PROJECT_NOT_FOUND, null);
-        }
+        return projectDao.findProjectById(projectId);
     }
 
-    public DeleteProjectResponseModel deleteProjectById(UUID projectId) {
-        try {
-            return projectDao.deleteProject(projectId);
-        } catch (IllegalArgumentException ex) {
-            throw new NotFoundException(Constants.PROJECT_NOT_FOUND, null);
-        }
+    public ProjectDto deleteProjectById(UUID projectId) {
+        return projectDao.deleteProject(projectId);
     }
 }

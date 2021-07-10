@@ -1,25 +1,28 @@
-package com.projecttrackerapi.service;
+package com.projecttrackerapi.service.projecttask.impl;
 
 import com.projecttrackerapi.constants.Constants;
-import com.projecttrackerapi.dao.ProjectDao;
+import com.projecttrackerapi.service.dao.impl.ProjectDaoImpl;
 import com.projecttrackerapi.error.restCustomExceptions.BadRequestException;
 import com.projecttrackerapi.error.restCustomExceptions.NotFoundException;
-import com.projecttrackerapi.models.ProjectTaskDto;
+import com.projecttrackerapi.dtos.ProjectTaskDto;
+import com.projecttrackerapi.service.projecttask.ProjectTaskService;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.UUID;
 
 @Service
-public class ProjectTaskService {
-    private final ProjectDao projectDao;
+public class ProjectTaskServiceImpl implements ProjectTaskService {
+    private final ProjectDaoImpl projectDao;
 
-    public ProjectTaskService(ProjectDao projectDao) {
+    public ProjectTaskServiceImpl(ProjectDaoImpl projectDao) {
         this.projectDao = projectDao;
     }
 
     public ProjectTaskDto saveOrUpdateProjectTask(ProjectTaskDto projectTaskDto) {
+        projectDao.findProjectById(projectTaskDto.getProject_id());
+
         String badRequestMessage = "";
-        if (projectTaskDto.getProjectId() == null) {
+        if (projectTaskDto.getProject_id() == null) {
             badRequestMessage += Constants.PROJECT_TASK_MUST_HAVE_PROJECT_ID;
         }
         if (projectTaskDto.getName() == null || projectTaskDto.getName().equals("")) {
@@ -28,7 +31,7 @@ public class ProjectTaskService {
         if (projectTaskDto.getDescription() == null || projectTaskDto.getDescription().equals("")) {
             badRequestMessage += Constants.PROJECT_TASK_MUST_HAVE_DESCRIPTION;
         }
-        if (projectTaskDto.getAcceptanceCriteria() == null || projectTaskDto.getAcceptanceCriteria().equals("")) {
+        if (projectTaskDto.getAcceptance_criteria() == null || projectTaskDto.getAcceptance_criteria().equals("")) {
             badRequestMessage += Constants.PROJECT_TASK_MUST_HAVE_ACCEPTANCE_CRITERIA;
         }
         if (!badRequestMessage.isEmpty()) {
@@ -39,12 +42,6 @@ public class ProjectTaskService {
             projectTaskDto.setStatus(Constants.TODO_STATUS);
         }
 
-        try {
-            projectDao.findProjectById(projectTaskDto.getProjectId());
-        } catch (IllegalArgumentException ex) {
-            throw new NotFoundException(Constants.PROJECT_FOR_TASK_NOT_FOUND, null);
-        }
-
         return projectDao.saveOrUpdateProjectTask(projectTaskDto);
     }
 
@@ -53,19 +50,11 @@ public class ProjectTaskService {
     }
 
     public ProjectTaskDto getProjectTaskById(UUID projectTaskId) {
-        try {
-            return projectDao.findProjectTaskById(projectTaskId);
-        } catch (IllegalArgumentException ex) {
-            throw new NotFoundException(Constants.PROJECT_TASK_NOT_FOUND, null);
-        }
+        return projectDao.findProjectTaskById(projectTaskId);
     }
 
     public List<ProjectTaskDto> getProjectTasksByProjectId(UUID projectId) {
-        try {
-            projectDao.findProjectById(projectId);
-        } catch (IllegalArgumentException ex) {
-            throw new NotFoundException(Constants.PROJECT_NOT_FOUND, null);
-        }
+        projectDao.findProjectById(projectId);
 
         List<ProjectTaskDto> projectTaskDtos = projectDao.findProjectTasksByProjectId(projectId);
         if (projectTaskDtos.isEmpty()) {
@@ -76,10 +65,6 @@ public class ProjectTaskService {
     }
 
     public ProjectTaskDto deleteProjectTaskById(UUID projectId) {
-        try {
-            return projectDao.deleteProjectTaskById(projectId);
-        } catch (IllegalArgumentException ex) {
-            throw new NotFoundException(Constants.PROJECT_TASK_NOT_FOUND, null);
-        }
+        return projectDao.deleteProjectTaskById(projectId);
     }
 }
