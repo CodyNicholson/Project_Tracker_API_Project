@@ -14,6 +14,9 @@ public interface ProjectTaskRepository extends JpaRepository<ProjectTask, UUID> 
     ProjectTask getById(@Param("id") UUID id);
 
     @Query(value = "SELECT * FROM projecttask pt WHERE pt.project_id = :projectId", nativeQuery = true)
+    List<ProjectTask> getByProjectId(@Param("projectId") UUID projectId);
+
+    @Query(value = "SELECT * FROM projecttask pt WHERE pt.project_id = :projectId", nativeQuery = true)
     List<ProjectTask> findAllByProjectId(@Param("projectId") UUID projectId);
 
     @Query(value = "DELETE FROM projecttask pt WHERE pt.project_id = :projectId", nativeQuery = true)

@@ -1,16 +1,20 @@
 package com.projecttrackerapi.dtos;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import java.util.UUID;
 
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class ProjectTaskDto {
     private UUID id;
-    private UUID projectId;
+    private UUID project_id;
     private String name;
     private String description;
-    private String acceptanceCriteria;
+    private String acceptance_criteria;
     private double points;
     private String status;
-    private String blockers;
 }

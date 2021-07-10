@@ -4,22 +4,21 @@ spring:
     url: ${DB_CONNECTION_STRING:defaultDbConnectionString}
     username: ${DB_USER:defaultDbUser}
     password: ${DB_PASSWORD:defaultPassword}
-  hikari:
-    minimum-idle: 2
-    maximum-pool-size: 4
-  jpa:
-    database: postgresql
-    hibernate:
-      ddl-auto: create
-    properties:
+    initialization-mode: always
+    hikari:
+      minimum-idle: 2
+      maximum-pool-size: 4
+    jpa:
+      database: postgresql
       hibernate:
-      dialect: org.hibernate.dialect.PostgreSQLDialect
-  flyway:
-    url: ${DB_CONNECTION_STRING:defaultDbConnectionString}
-    user: ${DB_USER:defaultDbUser}
-    password: ${DB_PASSWORD:defaultDbPassword}
-    schemas: ["public"]
-    baseline-on-migrate: true
+        ddl-auto: create
+      properties:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+flyway:
+  url: ${DB_CONNECTION_STRING:defaultDbConnectionString}
+  user: ${DB_USER:defaultDbUser}
+  password: ${DB_PASSWORD:defaultDbPassword}
+  schemas: ["public"]
 # docker-compose local db url = jdbc:postgresql://192.168.99.100:5432/d303tt7dgo2ndl?currentSchema=public
 ---
 spring:
@@ -28,19 +27,18 @@ spring:
     url: ${DB_CONNECTION_STRING:defaultDbConnectionString}
     username: ${DB_USER:defaultDbUser}
     password: ${DB_PASSWORD:defaultDbPassword}
-  hikari:
-    minimum-idle: 2
-    maximum-pool-size: 4
-  jpa:
-    database: postgresql
-    hibernate:
-      ddl-auto: create
-    properties:
+    initialization-mode: always
+    hikari:
+      minimum-idle: 2
+      maximum-pool-size: 4
+    jpa:
+      database: postgresql
       hibernate:
+        ddl-auto: create
+      properties:
         dialect: org.hibernate.dialect.PostgreSQLDialect
-  flyway:
-    url: ${DB_CONNECTION_STRING:defaultDbConnectionString}
-    user: ${DB_USER:defaultDbUser}
-    password: ${DB_PASSWORD:defaultDbPassword}
-    schemas: [ "public" ]
-    baseline-on-migrate: true
+flyway:
+  url: ${DB_CONNECTION_STRING:defaultDbConnectionString}
+  user: ${DB_USER:defaultDbUser}
+  password: ${DB_PASSWORD:defaultDbPassword}
+  schemas: [ "public" ]

@@ -4,7 +4,6 @@ import com.projecttrackerapi.constants.Constants;
 import com.projecttrackerapi.service.dao.impl.ProjectDaoImpl;
 import com.projecttrackerapi.error.restCustomExceptions.BadRequestException;
 import com.projecttrackerapi.error.restCustomExceptions.NotFoundException;
-import com.projecttrackerapi.dtos.DeleteProjectResponseModel;
 import com.projecttrackerapi.dtos.ProjectDto;
 import com.projecttrackerapi.service.project.ProjectService;
 import org.springframework.stereotype.Service;
@@ -33,11 +32,8 @@ public class ProjectServiceImpl implements ProjectService {
             throw new BadRequestException(badRequestMessage.trim(), null);
         }
 
-        if (project.getId() == null) {
-            project.setId(UUID.randomUUID());
-        }
-        if (project.getStartDate() == null) {
-            project.setStartDate(new Date());
+        if (project.getStart_date() == null) {
+            project.setStart_date(new Date());
         }
 
         return projectDao.saveOrUpdateProject(project);
@@ -48,18 +44,10 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     public ProjectDto getProjectById(UUID projectId) {
-        try {
-            return projectDao.findProjectById(projectId);
-        } catch (IllegalArgumentException ex) {
-            throw new NotFoundException(Constants.PROJECT_NOT_FOUND, null);
-        }
+        return projectDao.findProjectById(projectId);
     }
 
-    public DeleteProjectResponseModel deleteProjectById(UUID projectId) {
-        try {
-            return projectDao.deleteProject(projectId);
-        } catch (IllegalArgumentException ex) {
-            throw new NotFoundException(Constants.PROJECT_NOT_FOUND, null);
-        }
+    public ProjectDto deleteProjectById(UUID projectId) {
+        return projectDao.deleteProject(projectId);
     }
 }

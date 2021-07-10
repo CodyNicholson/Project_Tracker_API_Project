@@ -1,26 +1,26 @@
 package com.projecttrackerapi.service.dao.impl;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.projecttrackerapi.constants.Constants;
-import com.projecttrackerapi.entities.Project;
-import com.projecttrackerapi.entities.ProjectTask;
-import com.projecttrackerapi.error.restCustomExceptions.BadRequestException;
-import com.projecttrackerapi.error.restCustomExceptions.NotFoundException;
-import com.projecttrackerapi.dtos.DeleteProjectResponseModel;
 import com.projecttrackerapi.dtos.ProjectDto;
 import com.projecttrackerapi.dtos.ProjectTaskDto;
+import com.projecttrackerapi.entities.Project;
+import com.projecttrackerapi.entities.ProjectTask;
+import com.projecttrackerapi.error.restCustomExceptions.NotFoundException;
 import com.projecttrackerapi.repository.ProjectRepository;
 import com.projecttrackerapi.repository.ProjectTaskRepository;
 import com.projecttrackerapi.service.dao.ProjectDao;
-import org.slf4j.Logger;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import javax.annotation.PostConstruct;
+
 import javax.transaction.Transactional;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.UUID;
 
 @Service
+@Slf4j
 public class ProjectDaoImpl implements ProjectDao {
     @Autowired
     private ProjectRepository projectRepository;
@@ -28,14 +28,8 @@ public class ProjectDaoImpl implements ProjectDao {
     @Autowired
     private ProjectTaskRepository projectTaskRepository;
 
-    @Autowired
-    private ObjectMapper objectMapper;
-
-    @Autowired
-    private Logger logger;
-
     public ProjectDto saveOrUpdateProject(ProjectDto project) {
-        logger.info(Constants.saveOrUpdateProjectMessage(project));
+        log.info(Constants.saveOrUpdateProjectMessage(project));
         Project savedProject = projectRepository.save(projectDtoToEntity(project));
         return projectEntityToDto(savedProject);
     }
@@ -45,49 +39,74 @@ public class ProjectDaoImpl implements ProjectDao {
     }
 
     public ProjectDto findProjectById(UUID id){
-        return projectEntityToDto(projectRepository.getById(id));
-    }
-
-    @Transactional
-    public DeleteProjectResponseModel deleteProject(UUID id) {
         Project project = projectRepository.getById(id);
 
         if (project == null) {
             throw new NotFoundException(Constants.PROJECT_NOT_FOUND, null);
         }
 
-        List<ProjectTask> projectTasks = projectTaskRepository.deleteByProjectId(id);
+        return projectEntityToDto(project);
+    }
+
+    @Transactional
+    public ProjectDto deleteProject(UUID id) {
+        Project project = projectRepository.getById(id);
+
+        if (project == null) {
+            throw new NotFoundException(Constants.PROJECT_NOT_FOUND, null);
+        }
+
+        List<ProjectTask> projectTasks = projectTaskRepository.getByProjectId(id);
+        projectTasks.forEach(projectTask -> projectTaskRepository.delete(projectTask));
+
         projectRepository.delete(project);
 
         ProjectDto deletedProjectDto = projectEntityToDto(project);
         List<ProjectTaskDto> deletedProjectTaskDtos = projectTaskEntitiesToDtos(projectTasks);
 
-        logger.info(Constants.deleteProjectMessage(deletedProjectDto, deletedProjectTaskDtos));
-        return new DeleteProjectResponseModel(deletedProjectDto, deletedProjectTaskDtos);
+        log.info(Constants.deleteProjectMessage(deletedProjectDto, deletedProjectTaskDtos));
+
+        return deletedProjectDto;
     }
 
     public ProjectTaskDto saveOrUpdateProjectTask(ProjectTaskDto projectTaskDto) {
-        logger.info(Constants.saveOrUpdateProjectTaskMessage(projectTaskDto));
-        ProjectTask savedProjectTask = projectTaskRepository.save(projectTaskDtoToEntity(projectTaskDto));
+        log.info(Constants.saveOrUpdateProjectTaskMessage(projectTaskDto));
+
+        Project project = projectRepository.getById(projectTaskDto.getProject_id());
+
+        ProjectTask projectTask = projectTaskDtoToEntity(projectTaskDto);
+        projectTask.setProject(project);
+
+        ProjectTask savedProjectTask = projectTaskRepository.save(projectTask);
         return projectTaskEntityToDto(savedProjectTask);
     }
 
     public List<ProjectTaskDto> findAllProjectTasks() {
-        Iterable<ProjectTask> projectTasksIterable = projectTaskRepository.findAll();
-        List<ProjectTask> projectTasksList = new ArrayList<ProjectTask>();
-        projectTasksIterable.forEach(projectTasksList::add);
+        List<ProjectTask> projectTasksList = projectTaskRepository.findAll();
+
         return projectTaskEntitiesToDtos(projectTasksList);
     }
 
     public ProjectTaskDto findProjectTaskById(UUID id) {
-        return projectTaskEntityToDto(projectTaskRepository.getById(id));
+        ProjectTask projectTask = projectTaskRepository.getById(id);
+
+        if (projectTask == null) {
+            throw new NotFoundException(Constants.PROJECT_TASK_NOT_FOUND, null);
+        }
+
+        return projectTaskEntityToDto(projectTask);
     }
 
     public ProjectTaskDto deleteProjectTaskById(UUID id) {
         ProjectTask projectTask = projectTaskRepository.getById(id);
+
+        if (projectTask == null) {
+            throw new NotFoundException(Constants.PROJECT_TASK_NOT_FOUND, null);
+        }
+
         projectTaskRepository.delete(projectTask);
         ProjectTaskDto deletedProjectTaskDto = projectTaskEntityToDto(projectTask);
-        logger.info(Constants.deleteProjectTaskMessage(deletedProjectTaskDto));
+        log.info(Constants.deleteProjectTaskMessage(deletedProjectTaskDto));
         return deletedProjectTaskDto;
     }
 
@@ -96,39 +115,57 @@ public class ProjectDaoImpl implements ProjectDao {
     }
 
     private Project projectDtoToEntity(ProjectDto projectDto) {
-        try {
-            return objectMapper.readValue(projectDto.toString(), Project.class);
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-            throw new BadRequestException(Constants.INVALID_JSON, e);
-        }
+        return new Project(
+                projectDto.getId(),
+                projectDto.getName(),
+                projectDto.getDescription(),
+                projectDto.getStart_date(),
+                projectDto.getEnd_date(),
+                projectDto.getDeployed_link(),
+                projectDto.getDocumentation_link(),
+                projectDto.getCode_link(),
+                null);
     }
 
     private ProjectTask projectTaskDtoToEntity(ProjectTaskDto projectTaskDto) {
-        try {
-            return objectMapper.readValue(projectTaskDto.toString(), ProjectTask.class);
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-            throw new BadRequestException(Constants.INVALID_JSON, e);
-        }
+        return new ProjectTask(
+                projectTaskDto.getProject_id(),
+                projectTaskDto.getName(),
+                projectTaskDto.getDescription(),
+                projectTaskDto.getAcceptance_criteria(),
+                projectTaskDto.getPoints(),
+                projectTaskDto.getStatus(),
+                null
+        );
     }
 
     private ProjectDto projectEntityToDto(Project project) {
-        try {
-            return objectMapper.readValue(project.toString(), ProjectDto.class);
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-            throw new BadRequestException(Constants.INVALID_JSON, e);
-        }
+        return new ProjectDto(
+                project.getId(),
+                project.getName(),
+                project.getDescription(),
+                project.getStart_date(),
+                project.getEnd_date(),
+                project.getDeployed_link(),
+                project.getDocumentation_link(),
+                project.getCodeLink()
+        );
     }
 
     private ProjectTaskDto projectTaskEntityToDto(ProjectTask projectTask) {
-        try {
-            return objectMapper.readValue(projectTask.toString(), ProjectTaskDto.class);
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-            throw new BadRequestException(Constants.INVALID_JSON, e);
+        UUID projectId = null;
+        if (projectTask.getProject() != null) {
+            projectId = projectTask.getProject().getId();
         }
+        return new ProjectTaskDto(
+                projectTask.getId(),
+                projectId,
+                projectTask.getName(),
+                projectTask.getDescription(),
+                projectTask.getAcceptance_criteria(),
+                projectTask.getPoints(),
+                projectTask.getStatus()
+        );
     }
 
     private List<ProjectTaskDto> projectTaskEntitiesToDtos(List<ProjectTask> projectTasks) {
@@ -141,71 +178,11 @@ public class ProjectDaoImpl implements ProjectDao {
     }
 
     private List<ProjectDto> projectEntitiesToDtos(Iterable<Project> projects) {
-        List<ProjectDto> projectDtos = new ArrayList<ProjectDto>(Collections.emptyList());
+        List<ProjectDto> projectDtos = new ArrayList<>(Collections.emptyList());
         for (Project project : projects) {
             ProjectDto projectDto = projectEntityToDto(project);
             projectDtos.add(projectDto);
         }
         return projectDtos;
     }
-
-//    @PostConstruct
-//    @Transactional
-//    private void fillTestData() {
-//        Project projectTrackingProject = new Project(UUID.randomUUID(), "Project Tracking App", "An application I created to track all of my side projects", new Date(), null, "deployedLink1", "docLink1", "codeLink1");
-//        Project issTrackingProject = new Project(UUID.randomUUID(), "ISS Tracking App", "description2", new Date(), null, "deployedLink2", "docLink2", "codeLink2");
-//        Project battleApp = new Project(UUID.randomUUID(), "Battle App", "description2", new Date(), null, "deployedLink2", "docLink2", "codeLink2");
-//        Project projectDesignerProject = new Project(UUID.randomUUID(), "Project Designer App", "A remodel of drawio", new Date(), null, "deployedLink2", "docLink2", "codeLink2");
-//        Project tronApp = new Project(UUID.randomUUID(), "Tron App", "description2", new Date(), null, "deployedLink2", "docLink2", "codeLink2");
-//        Project bloggingApp = new Project(UUID.randomUUID(), "Blogging App", "description2", new Date(), null, "deployedLink2", "docLink2", "codeLink2");
-//        Project selfDrivingCarProjectWebsite = new Project(UUID.randomUUID(), "Self Driving Car Project Website", "description2", new Date(), null, "deployedLink2", "docLink2", "codeLink2");
-//        Project clnGithubIoProject = new Project(UUID.randomUUID(), "CodyNicholson.github.io", "description2", new Date(), null, "deployedLink2", "docLink2", "codeLink2");
-//        Project portfolioWebsite = new Project(UUID.randomUUID(), "Portfolio Website", "My portfolio website on Heroku!", new Date(), null, "deployedLink2", "docLink2", "codeLink2");
-//        Project springBootKafkaProject = new Project(UUID.randomUUID(), "Spring Boot Kafka Project", "description2", new Date(), null, "deployedLink2", "docLink2", "codeLink2");
-//        Project fastStyleTransferProject = new Project(UUID.randomUUID(), "Fast Style Transfer Project", "description2", new Date(), null, "deployedLink2", "docLink2", "codeLink2");
-//        Project rixusProject = new Project(UUID.randomUUID(), "Rixus Project", "Voice operated personal assistant - maybe built using Flutter?", new Date(), null, "deployedLink2", "docLink2", "codeLink2");
-//        Project mindVaultProject = new Project(UUID.randomUUID(), "Mind Vault Project", "description2", new Date(), null, "deployedLink2", "docLink2", "codeLink2");
-//        Project stockScrapperProject = new Project(UUID.randomUUID(), "Stock Scrapper Project", "description2", new Date(), null, "deployedLink2", "docLink2", "codeLink2");
-//        Project tetrisProject = new Project(UUID.randomUUID(), "Tetris Project", "description2", new Date(), null, "deployedLink2", "docLink2", "codeLink2");
-//        Project enodoProject = new Project(UUID.randomUUID(), "Enodo Project", "description2", new Date(), null, "deployedLink2", "docLink2", "codeLink2");
-//        Project multiplayerTetrisProject = new Project(UUID.randomUUID(), "Multiplayer Tetris Project", "description2", new Date(), null, "deployedLink2", "docLink2", "codeLink2");
-//        Project memeCreatorProject = new Project(UUID.randomUUID(), "Meme Creator Project", "description2", new Date(), null, "deployedLink2", "docLink2", "codeLink2");
-//        Project starshotRicochetProject = new Project(UUID.randomUUID(), "Starshot Ricochet Project", "The web based implementation of Benny Breakout's adventure to save the world", new Date(), null, "deployedLink2", "docLink2", "codeLink2");
-//        Project findingLaneLinesProject = new Project(UUID.randomUUID(), "Finding Lane Lines Project", "description2", new Date(), null, "deployedLink2", "docLink2", "codeLink2");
-//        Project trafficSignClassifierProject = new Project(UUID.randomUUID(), "Traffic Sign Classifier Project", "description2", new Date(), null, "deployedLink2", "docLink2", "codeLink2");
-//        Project behavioralCloningProject = new Project(UUID.randomUUID(), "Behavioral Cloning Project", "description2", new Date(), null, "deployedLink2", "docLink2", "codeLink2");
-//        Project advancedLaneLineFindingProject = new Project(UUID.randomUUID(), "Advanced Lane Line Finding Project", "description2", new Date(), null, "deployedLink2", "docLink2", "codeLink2");
-//        Project vehicleDetectionProject = new Project(UUID.randomUUID(), "Vehicle Detection Project", "description2", new Date(), null, "deployedLink2", "docLink2", "codeLink2");
-//        Project extendedKalmanFilterProject = new Project(UUID.randomUUID(), "Extended Kalman Filter Project", "description2", new Date(), null, "deployedLink2", "docLink2", "codeLink2");
-//        Project unscentedKalmanFilter = new Project(UUID.randomUUID(), "Unscented Kalman Filter Project", "description2", new Date(), null, "deployedLink2", "docLink2", "codeLink2");
-//        Project kidnappedVehicleProject = new Project(UUID.randomUUID(), "Kidnapped Vehicle Project", "description2", new Date(), null, "deployedLink2", "docLink2", "codeLink2");
-//        Project pidControllerProject = new Project(UUID.randomUUID(), "PID Controller Project", "description2", new Date(), null, "deployedLink2", "docLink2", "codeLink2");
-//        Project modelPredictiveControllerProject = new Project(UUID.randomUUID(), "Model Predictive Controller Project", "description2", new Date(), null, "deployedLink2", "docLink2", "codeLink2");
-//        Project ecommerceProject = new Project(UUID.randomUUID(), "VueJS e-Commerce Platform w/ Stripe integration", "description2", new Date(), null, "deployedLink2", "docLink2", "codeLink2");
-//        Project seleniumAutomatedTestingFramework = new Project(UUID.randomUUID(), "Selenium Automated Testing Framework", "description2", new Date(), null, "deployedLink2", "docLink2", "codeLink2");
-//        Project collectiveKnowledgeProject = new Project(UUID.randomUUID(), "Collective Knowledge Project", "description2", new Date(), null, "deployedLink2", "docLink2", "codeLink2");
-//
-//        projectRepository.save(projectTrackingProject);
-//        projectRepository.save(issTrackingProject);
-//
-//        ProjectTask task1 = new ProjectTask(projectTrackingProject.getId(), "Add Flyway DB Migrations", "description 1", "AC 1", 3.0, "Status 1", null);
-//        ProjectTask task2 = new ProjectTask(projectTrackingProject.getId(), "Create New Project Selection Component", "description 2", "AC 2", 1, "Status 2", null);
-//        ProjectTask task3 = new ProjectTask(projectTrackingProject.getId(), "Add JWT Token Authentication", "description 2", "AC 2", 1, "Status 2", null);
-//        ProjectTask task4 = new ProjectTask(projectTrackingProject.getId(), "Add Export DB As JSON file", "description 2", "AC 2", 1, "Status 2", null);
-//        ProjectTask task5 = new ProjectTask(issTrackingProject.getId(), "Add ISS Speed Graph", "description 4", "AC 4", 1, "Status 4", null);
-//        ProjectTask task6 = new ProjectTask(issTrackingProject.getId(), "Add ISS Most Common Weather Condition Graph", "description 5", "AC 5", 2, "Status 5", "blocked");
-//        ProjectTask task7 = new ProjectTask(issTrackingProject.getId(), "Add ISS Add Average Temperature", "description 3", "AC 3", 8, "Status 3", "blocked");
-//        ProjectTask task8 = new ProjectTask(issTrackingProject.getId(), "Add ISS Most Visited Countries", "description 3", "AC 3", 8, "Status 3", "blocked");
-//        ProjectTask task9 = new ProjectTask(issTrackingProject.getId(), "Add Export DB As JSON File", "description 3", "AC 3", 8, "Status 3", "blocked");
-//
-//        projectTaskRepository.save(task1);
-//        projectTaskRepository.save(task2);
-//        projectTaskRepository.save(task3);
-//        projectTaskRepository.save(task4);
-//        projectTaskRepository.save(task5);
-//        projectTaskRepository.save(task6);
-//        projectTaskRepository.save(task7);
-//        projectTaskRepository.save(task8);
-//        projectTaskRepository.save(task9);
-//    }
 }

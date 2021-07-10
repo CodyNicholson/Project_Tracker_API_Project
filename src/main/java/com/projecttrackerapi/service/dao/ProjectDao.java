@@ -1,6 +1,5 @@
 package com.projecttrackerapi.service.dao;
 
-import com.projecttrackerapi.dtos.DeleteProjectResponseModel;
 import com.projecttrackerapi.dtos.ProjectDto;
 import com.projecttrackerapi.dtos.ProjectTaskDto;
 
@@ -11,7 +10,7 @@ public interface ProjectDao {
     ProjectDto saveOrUpdateProject(ProjectDto project);
     List<ProjectDto> findAllProjects();
     ProjectDto findProjectById(UUID id);
-    DeleteProjectResponseModel deleteProject(UUID id);
+    ProjectDto deleteProject(UUID id);
 
     ProjectTaskDto saveOrUpdateProjectTask(ProjectTaskDto projectTaskDto);
     List<ProjectTaskDto> findAllProjectTasks();

@@ -11,50 +11,50 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/task")
+@RequestMapping("/project")
 @CrossOrigin
 public class ProjectTaskController {
 
     @Autowired
     private ProjectTaskServiceImpl projectTaskService;
 
-    @PostMapping("/")
+    @PostMapping("/task/")
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<GenericResponseModel> addProjectTaskToBoard(@RequestBody ProjectTaskDto projectTaskDto){
         ProjectTaskDto newProjectTaskDto = projectTaskService.saveOrUpdateProjectTask(projectTaskDto);
         GenericResponseModel responseModel = new GenericResponseModel(201, newProjectTaskDto);
-        return new ResponseEntity<GenericResponseModel>(responseModel, HttpStatus.CREATED);
+        return new ResponseEntity<>(responseModel, HttpStatus.CREATED);
     }
 
-    @GetMapping("/all")
+    @GetMapping("/task/all")
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<GenericResponseModel> getAllPTs(){
         List<ProjectTaskDto> projectTaskDtos = projectTaskService.getAllProjectTasks();
         GenericResponseModel responseModel = new GenericResponseModel(200, projectTaskDtos);
-        return new ResponseEntity<GenericResponseModel>(responseModel, HttpStatus.OK);
+        return new ResponseEntity<>(responseModel, HttpStatus.OK);
     }
 
-    @GetMapping("/{projectTaskId}")
+    @GetMapping("/task/{projectTaskId}")
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<GenericResponseModel> getProjectTaskById(@PathVariable("projectTaskId") String projectTaskId){
         ProjectTaskDto projectTaskDto = projectTaskService.getProjectTaskById(UUID.fromString(projectTaskId));
         GenericResponseModel responseModel = new GenericResponseModel(200, projectTaskDto);
-        return new ResponseEntity<GenericResponseModel>(responseModel, HttpStatus.OK);
+        return new ResponseEntity<>(responseModel, HttpStatus.OK);
     }
 
-    @GetMapping("/project/{projectId}")
+    @GetMapping("/{projectId}/task/")
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<GenericResponseModel> getProjectTasksByProjectId(@PathVariable("projectId") String projectId){
         List<ProjectTaskDto> projectTaskDto = projectTaskService.getProjectTasksByProjectId(UUID.fromString(projectId));
         GenericResponseModel responseModel = new GenericResponseModel(200, projectTaskDto);
-        return new ResponseEntity<GenericResponseModel>(responseModel, HttpStatus.OK);
+        return new ResponseEntity<>(responseModel, HttpStatus.OK);
     }
 
-    @DeleteMapping("/{projectTaskId}")
+    @DeleteMapping("/task/{projectTaskId}")
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<GenericResponseModel> deleteProjectTask(@PathVariable("projectTaskId") String projectTaskId){
         ProjectTaskDto projectTaskDto = projectTaskService.deleteProjectTaskById(UUID.fromString(projectTaskId));
         GenericResponseModel responseModel = new GenericResponseModel(200, projectTaskDto);
-        return new ResponseEntity<GenericResponseModel>(responseModel, HttpStatus.OK);
+        return new ResponseEntity<>(responseModel, HttpStatus.OK);
     }
 }
