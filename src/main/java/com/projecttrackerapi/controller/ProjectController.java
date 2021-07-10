@@ -1,9 +1,8 @@
 package com.projecttrackerapi.controller;
 
-import com.projecttrackerapi.models.DeleteProjectResponseModel;
-import com.projecttrackerapi.models.GenericResponseModel;
-import com.projecttrackerapi.models.ProjectDto;
-import com.projecttrackerapi.service.ProjectService;
+import com.projecttrackerapi.dtos.GenericResponseModel;
+import com.projecttrackerapi.dtos.ProjectDto;
+import com.projecttrackerapi.service.project.impl.ProjectServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,14 +15,14 @@ import java.util.UUID;
 public class ProjectController {
 
     @Autowired
-    private ProjectService projectService;
+    private ProjectServiceImpl projectService;
 
     @PostMapping("/")
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<GenericResponseModel> addProjectToBoard(@RequestBody ProjectDto project) {
         ProjectDto newProject = projectService.saveOrUpdateProject(project);
         GenericResponseModel responseModel = new GenericResponseModel(201, newProject);
-        return new ResponseEntity<GenericResponseModel>(responseModel, HttpStatus.CREATED);
+        return new ResponseEntity<>(responseModel, HttpStatus.CREATED);
     }
 
     @GetMapping("/all")
@@ -31,7 +30,7 @@ public class ProjectController {
     public ResponseEntity<GenericResponseModel> getAllPTs(){
         Iterable<ProjectDto> projects = projectService.getAllProjects();
         GenericResponseModel responseModel = new GenericResponseModel(200, projects);
-        return new ResponseEntity<GenericResponseModel>(responseModel, HttpStatus.OK);
+        return new ResponseEntity<>(responseModel, HttpStatus.OK);
     }
 
     @GetMapping("/{projectId}")
@@ -39,14 +38,14 @@ public class ProjectController {
     public ResponseEntity<GenericResponseModel> getProjectById(@PathVariable("projectId") String projectId){
         ProjectDto projectDto = projectService.getProjectById(UUID.fromString(projectId));
         GenericResponseModel responseModel = new GenericResponseModel(200, projectDto);
-        return new ResponseEntity<GenericResponseModel>(responseModel, HttpStatus.OK);
+        return new ResponseEntity<>(responseModel, HttpStatus.OK);
     }
 
     @DeleteMapping("/{projectId}")
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<GenericResponseModel> deleteProject(@PathVariable("projectId") String projectId){
-        DeleteProjectResponseModel deleteProjectResponseModel = projectService.deleteProjectById(UUID.fromString(projectId));
+        ProjectDto deleteProjectResponseModel = projectService.deleteProjectById(UUID.fromString(projectId));
         GenericResponseModel responseModel = new GenericResponseModel(200, deleteProjectResponseModel);
-        return new ResponseEntity<GenericResponseModel>(responseModel, HttpStatus.OK);
+        return new ResponseEntity<>(responseModel, HttpStatus.OK);
     }
 }
