@@ -1,20 +1,23 @@
 package com.projecttrackerapi.service.dao;
 
-import com.projecttrackerapi.dtos.ProjectDto;
-import com.projecttrackerapi.dtos.ProjectTaskDto;
+import com.projecttrackerapi.dtos.ProjectRequestDto;
+import com.projecttrackerapi.dtos.ProjectResponseDto;
+import com.projecttrackerapi.dtos.ProjectTaskRequestDto;
+import com.projecttrackerapi.dtos.ProjectTaskResponseDto;
 
 import java.util.List;
 import java.util.UUID;
 
 public interface ProjectDao {
-    ProjectDto saveOrUpdateProject(ProjectDto project);
-    List<ProjectDto> findAllProjects();
-    ProjectDto findProjectById(UUID id);
-    ProjectDto deleteProject(UUID id);
+    ProjectResponseDto createProject(ProjectRequestDto projectRequestDto);
+    List<ProjectResponseDto> findAllProjects();
+    ProjectResponseDto findProjectById(UUID id);
+    ProjectResponseDto updateProject(ProjectRequestDto projectRequestDto, UUID projectId);
+    ProjectResponseDto deleteProject(UUID id);
 
-    ProjectTaskDto saveOrUpdateProjectTask(ProjectTaskDto projectTaskDto);
-    List<ProjectTaskDto> findAllProjectTasks();
-    ProjectTaskDto findProjectTaskById(UUID id);
-    ProjectTaskDto deleteProjectTaskById(UUID id);
-    List<ProjectTaskDto> findProjectTasksByProjectId(UUID projectId);
+    ProjectTaskResponseDto createProjectTask(ProjectTaskRequestDto projectTaskRequestDto, UUID projectId);
+    ProjectTaskResponseDto findProjectTaskById(UUID projectTaskId, UUID projectId);
+    List<ProjectTaskResponseDto> findProjectTasksByProjectId(UUID projectId);
+    ProjectTaskResponseDto updateProjectTask(ProjectTaskRequestDto projectTaskRequestDto, UUID projectTaskId, UUID projectId);
+    ProjectTaskResponseDto deleteProjectTaskById(UUID projectTaskId, UUID projectId);
 }

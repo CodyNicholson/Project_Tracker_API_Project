@@ -4,17 +4,18 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Date;
 import java.util.UUID;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ProjectTaskDto {
-    private UUID id;
-    private UUID project_id;
+public class ProjectRequestDto {
     private String name;
     private String description;
-    private String acceptance_criteria;
-    private double points;
-    private String status;
+    private Date start_date;
+    private Date end_date;
+    private String deployed_link;
+    private String documentation_link;
+    private String code_link;
 }

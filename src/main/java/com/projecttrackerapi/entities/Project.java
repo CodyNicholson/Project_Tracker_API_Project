@@ -32,7 +32,7 @@ public class Project {
     private Date end_date;
     private String deployed_link;
     private String documentation_link;
-    private String codeLink;
+    private String code_link;
 
     @OneToMany(mappedBy = "project")
     private List<ProjectTask> projectTasks;

@@ -1,13 +1,14 @@
 package com.projecttrackerapi.service.project;
 
-import com.projecttrackerapi.dtos.ProjectDto;
+import com.projecttrackerapi.dtos.ProjectRequestDto;
+import com.projecttrackerapi.dtos.ProjectResponseDto;
 
 import java.util.List;
-import java.util.UUID;
 
 public interface ProjectService {
-    ProjectDto saveOrUpdateProject(ProjectDto project);
-    List<ProjectDto> getAllProjects();
-    ProjectDto getProjectById(UUID projectId);
-    ProjectDto deleteProjectById(UUID projectId);
+    ProjectResponseDto createProject(ProjectRequestDto projectRequestDto);
+    ProjectResponseDto readProjectById(String projectId);
+    List<ProjectResponseDto> readAllProjects();
+    ProjectResponseDto updateProject(ProjectRequestDto projectRequestDto, String projectId);
+    ProjectResponseDto deleteProjectById(String projectId);
 }

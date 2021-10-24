@@ -1,13 +1,13 @@
 package com.projecttrackerapi.controller;
 
-import com.projecttrackerapi.dtos.GenericResponseModel;
-import com.projecttrackerapi.dtos.ProjectDto;
+import com.projecttrackerapi.dtos.ProjectRequestDto;
+import com.projecttrackerapi.dtos.GenericResponseDto;
+import com.projecttrackerapi.dtos.ProjectResponseDto;
 import com.projecttrackerapi.service.project.impl.ProjectServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import java.util.UUID;
 
 @RestController
 @RequestMapping("/project")
@@ -19,33 +19,44 @@ public class ProjectController {
 
     @PostMapping("/")
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<GenericResponseModel> addProjectToBoard(@RequestBody ProjectDto project) {
-        ProjectDto newProject = projectService.saveOrUpdateProject(project);
-        GenericResponseModel responseModel = new GenericResponseModel(201, newProject);
+    public ResponseEntity<GenericResponseDto> addProjectToBoard(@RequestBody ProjectRequestDto projectRequestDto) {
+        ProjectResponseDto newProject = projectService.createProject(projectRequestDto);
+        GenericResponseDto responseModel = new GenericResponseDto(HttpStatus.CREATED.value(), newProject);
         return new ResponseEntity<>(responseModel, HttpStatus.CREATED);
-    }
-
-    @GetMapping("/all")
-    @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<GenericResponseModel> getAllPTs(){
-        Iterable<ProjectDto> projects = projectService.getAllProjects();
-        GenericResponseModel responseModel = new GenericResponseModel(200, projects);
-        return new ResponseEntity<>(responseModel, HttpStatus.OK);
     }
 
     @GetMapping("/{projectId}")
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<GenericResponseModel> getProjectById(@PathVariable("projectId") String projectId){
-        ProjectDto projectDto = projectService.getProjectById(UUID.fromString(projectId));
-        GenericResponseModel responseModel = new GenericResponseModel(200, projectDto);
+    public ResponseEntity<GenericResponseDto> getProjectById(@PathVariable("projectId") String projectId){
+        ProjectResponseDto projectResponseDto = projectService.readProjectById(projectId);
+        GenericResponseDto responseModel = new GenericResponseDto(HttpStatus.OK.value(), projectResponseDto);
         return new ResponseEntity<>(responseModel, HttpStatus.OK);
+    }
+
+    @GetMapping("/")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<GenericResponseDto> getAllProjects(){
+        Iterable<ProjectResponseDto> projects = projectService.readAllProjects();
+        GenericResponseDto responseModel = new GenericResponseDto(HttpStatus.OK.value(), projects);
+        return new ResponseEntity<>(responseModel, HttpStatus.OK);
+    }
+
+    @PutMapping("/{projectId}")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<GenericResponseDto> updateProject(
+            @PathVariable("projectId") String projectId,
+            @RequestBody ProjectRequestDto projectRequestDto
+    ) {
+        ProjectResponseDto newProject = projectService.updateProject(projectRequestDto, projectId);
+        GenericResponseDto responseModel = new GenericResponseDto(HttpStatus.CREATED.value(), newProject);
+        return new ResponseEntity<>(responseModel, HttpStatus.CREATED);
     }
 
     @DeleteMapping("/{projectId}")
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<GenericResponseModel> deleteProject(@PathVariable("projectId") String projectId){
-        ProjectDto deleteProjectResponseModel = projectService.deleteProjectById(UUID.fromString(projectId));
-        GenericResponseModel responseModel = new GenericResponseModel(200, deleteProjectResponseModel);
+    public ResponseEntity<GenericResponseDto> deleteProject(@PathVariable("projectId") String projectId){
+        ProjectResponseDto deleteProjectResponseModel = projectService.deleteProjectById(projectId);
+        GenericResponseDto responseModel = new GenericResponseDto(HttpStatus.OK.value(), deleteProjectResponseModel);
         return new ResponseEntity<>(responseModel, HttpStatus.OK);
     }
 }

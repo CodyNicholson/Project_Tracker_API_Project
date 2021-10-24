@@ -1,10 +1,13 @@
 package com.projecttrackerapi.constants;
 
-import com.projecttrackerapi.dtos.ProjectDto;
-import com.projecttrackerapi.dtos.ProjectTaskDto;
+import com.projecttrackerapi.dtos.ProjectRequestDto;
+import com.projecttrackerapi.dtos.ProjectResponseDto;
+import com.projecttrackerapi.dtos.ProjectTaskRequestDto;
+import com.projecttrackerapi.dtos.ProjectTaskResponseDto;
 
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 public final class Constants {
     // Project Statuses
@@ -40,19 +43,31 @@ public final class Constants {
     public static final String INVALID_UUID_STRING = "Invalid UUID string:";
 
     // Log Messages
-    public static String saveOrUpdateProjectMessage(ProjectDto project) {
-        return "\nTime: " + new Date().toString() + ", \nSaved/Updated Project: " + project.toString();
+    public static String createProjectLog(ProjectRequestDto projectRequestDto) {
+        return "\nTime: " + new Date().toString() + "\nCreate Project: " + projectRequestDto.toString();
     }
 
-    public static String deleteProjectMessage(ProjectDto deletedProject, List<ProjectTaskDto> deletedProjectTasks) {
-        return "\nTime: " + new Date().toString() + ", \nDeleted Project: " + deletedProject.toString() + ", and Project Tasks: " + deletedProjectTasks.toString();
+    public static String getProjectLog(ProjectResponseDto project) {
+        return "\nTime: " + new Date().toString() + "\nGet Project: " + project.toString();
     }
 
-    public static String saveOrUpdateProjectTaskMessage(ProjectTaskDto projectTask) {
-        return "\nTime: " + new Date().toString() + ", \nSaved/Updated Project Task: " + projectTask.toString();
+    public static String updateProjectLog(ProjectRequestDto projectRequestDto, UUID projectId) {
+        return "\nTime: " + new Date().toString() + "\nProjectId: " + projectId + "\nUpdate Project to: " + projectRequestDto.toString();
     }
 
-    public static String deleteProjectTaskMessage(ProjectTaskDto projectTask) {
-        return "\nTime: " + new Date().toString() + ", \nDeleted Project Task: " + projectTask.toString();
+    public static String deleteProjectLog(ProjectResponseDto deletedProject, List<ProjectTaskResponseDto> deletedProjectTasks) {
+        return "\nTime: " + new Date().toString() + "\nDeleted Project: " + deletedProject.toString() + ", and Project Tasks: " + deletedProjectTasks.toString();
+    }
+
+    public static String saveProjectTaskMessage(ProjectTaskRequestDto projectTaskRequestDto) {
+        return "\nTime: " + new Date().toString() + "\nSaved Project Task: " + projectTaskRequestDto.toString();
+    }
+
+    public static String updateProjectTaskLog(ProjectTaskRequestDto projectTaskRequestDto, UUID projectTaskId) {
+        return "\nTime: " + new Date().toString() + "\nProjectTaskId: " + projectTaskId + "\nUpdate Project Task to: " + projectTaskRequestDto.toString();
+    }
+
+    public static String deleteProjectTaskMessage(ProjectTaskResponseDto projectTask) {
+        return "\nTime: " + new Date().toString() + "\nDeleted Project Task: " + projectTask.toString();
     }
 }

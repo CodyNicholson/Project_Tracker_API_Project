@@ -10,7 +10,7 @@ import java.util.UUID;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ProjectDto {
+public class ProjectResponseDto {
     private UUID id;
     private String name;
     private String description;

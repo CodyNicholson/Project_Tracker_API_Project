@@ -17,3 +17,8 @@ Kill a single running container. You can get the container Id from "docker ps". 
 
 ### docker rm {id}
 Remove a killed container. When you remove a container it is gone for good and you can start fresh the next time you run your "docker-compose up" command. This is important because sometimes when you kill a postgres container or kafka container it will not start fresh the next time you run your container and it can cause problems.
+
+***
+
+### docker-compose local db url
+> jdbc:postgresql://192.168.99.100:5432/d303tt7dgo2ndl?currentSchema=public

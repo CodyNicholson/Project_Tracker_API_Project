@@ -19,7 +19,6 @@ flyway:
   user: ${DB_USER:defaultDbUser}
   password: ${DB_PASSWORD:defaultDbPassword}
   schemas: ["public"]
-# docker-compose local db url = jdbc:postgresql://192.168.99.100:5432/d303tt7dgo2ndl?currentSchema=public
 ---
 spring:
   profiles: PROD

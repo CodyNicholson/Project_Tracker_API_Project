@@ -1,10 +1,10 @@
 package com.projecttrackerapi.service.projecttask.impl;
 
 import com.projecttrackerapi.constants.Constants;
+import com.projecttrackerapi.dtos.ProjectTaskRequestDto;
 import com.projecttrackerapi.service.dao.impl.ProjectDaoImpl;
 import com.projecttrackerapi.error.restCustomExceptions.BadRequestException;
-import com.projecttrackerapi.error.restCustomExceptions.NotFoundException;
-import com.projecttrackerapi.dtos.ProjectTaskDto;
+import com.projecttrackerapi.dtos.ProjectTaskResponseDto;
 import com.projecttrackerapi.service.projecttask.ProjectTaskService;
 import org.springframework.stereotype.Service;
 import java.util.List;
@@ -18,53 +18,64 @@ public class ProjectTaskServiceImpl implements ProjectTaskService {
         this.projectDao = projectDao;
     }
 
-    public ProjectTaskDto saveOrUpdateProjectTask(ProjectTaskDto projectTaskDto) {
-        projectDao.findProjectById(projectTaskDto.getProject_id());
+    @Override
+    public ProjectTaskResponseDto createProjectTask(ProjectTaskRequestDto projectTaskRequestDto, String projectId) {
+        validateProjectTask(projectTaskRequestDto, projectId);
 
+        return projectDao.createProjectTask(projectTaskRequestDto, UUID.fromString(projectId));
+    }
+
+    @Override
+    public ProjectTaskResponseDto getProjectTaskById(String projectTaskId, String projectId) {
+        return projectDao.findProjectTaskById(UUID.fromString(projectTaskId), UUID.fromString(projectId));
+    }
+
+    @Override
+    public List<ProjectTaskResponseDto> getProjectTasksByProjectId(String projectId) {
+        UUID projectUUID = UUID.fromString(projectId);
+
+        return projectDao.findProjectTasksByProjectId(projectUUID);
+    }
+
+    @Override
+    public ProjectTaskResponseDto updateProjectTask(ProjectTaskRequestDto projectTaskRequestDto, String projectTaskId, String projectId) {
+        validateProjectTask(projectTaskRequestDto, projectId);
+
+        projectDao.findProjectById(UUID.fromString(projectId));
+
+        if(projectTaskRequestDto.getStatus() == null || projectTaskRequestDto.getStatus().isEmpty()){
+            projectTaskRequestDto.setStatus(Constants.TODO_STATUS);
+        }
+
+        return projectDao.updateProjectTask(projectTaskRequestDto, UUID.fromString(projectTaskId), UUID.fromString(projectId));
+    }
+
+    @Override
+    public ProjectTaskResponseDto deleteProjectTaskById(String projectTaskId, String projectId) {
+        return projectDao.deleteProjectTaskById(UUID.fromString(projectTaskId), UUID.fromString(projectId));
+    }
+
+    private void validateProjectTask(ProjectTaskRequestDto projectTaskRequestDto, String projectId) {
         String badRequestMessage = "";
-        if (projectTaskDto.getProject_id() == null) {
+
+        if (projectId == null) {
             badRequestMessage += Constants.PROJECT_TASK_MUST_HAVE_PROJECT_ID;
         }
-        if (projectTaskDto.getName() == null || projectTaskDto.getName().equals("")) {
+
+        if (projectTaskRequestDto.getName() == null || projectTaskRequestDto.getName().equals("")) {
             badRequestMessage += Constants.PROJECT_TASK_MUST_HAVE_NAME;
         }
-        if (projectTaskDto.getDescription() == null || projectTaskDto.getDescription().equals("")) {
+
+        if (projectTaskRequestDto.getDescription() == null || projectTaskRequestDto.getDescription().equals("")) {
             badRequestMessage += Constants.PROJECT_TASK_MUST_HAVE_DESCRIPTION;
         }
-        if (projectTaskDto.getAcceptance_criteria() == null || projectTaskDto.getAcceptance_criteria().equals("")) {
+
+        if (projectTaskRequestDto.getAcceptance_criteria() == null || projectTaskRequestDto.getAcceptance_criteria().equals("")) {
             badRequestMessage += Constants.PROJECT_TASK_MUST_HAVE_ACCEPTANCE_CRITERIA;
         }
+
         if (!badRequestMessage.isEmpty()) {
             throw new BadRequestException(badRequestMessage.trim(), null);
         }
-
-        if(projectTaskDto.getStatus() == null || projectTaskDto.getStatus().isEmpty()){
-            projectTaskDto.setStatus(Constants.TODO_STATUS);
-        }
-
-        return projectDao.saveOrUpdateProjectTask(projectTaskDto);
-    }
-
-    public List<ProjectTaskDto> getAllProjectTasks() {
-        return projectDao.findAllProjectTasks();
-    }
-
-    public ProjectTaskDto getProjectTaskById(UUID projectTaskId) {
-        return projectDao.findProjectTaskById(projectTaskId);
-    }
-
-    public List<ProjectTaskDto> getProjectTasksByProjectId(UUID projectId) {
-        projectDao.findProjectById(projectId);
-
-        List<ProjectTaskDto> projectTaskDtos = projectDao.findProjectTasksByProjectId(projectId);
-        if (projectTaskDtos.isEmpty()) {
-            throw new NotFoundException(Constants.PROJECT_HAS_NO_TASKS, null);
-        }
-
-        return projectTaskDtos;
-    }
-
-    public ProjectTaskDto deleteProjectTaskById(UUID projectId) {
-        return projectDao.deleteProjectTaskById(projectId);
     }
 }
