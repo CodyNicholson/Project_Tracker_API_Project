@@ -76,20 +76,20 @@ public class ProjectDaoImpl implements ProjectDao {
 
     @Override
     @Transactional
-    public ProjectResponseDto deleteProject(UUID id) {
-        Project project = projectRepository.getById(id);
+    public ProjectResponseDto deleteProject(UUID projectId) {
+        Project project = projectRepository.getById(projectId);
 
         if (project == null) {
             throw new NotFoundException(Constants.PROJECT_NOT_FOUND, null);
         }
 
-        List<ProjectTask> projectTasks = projectTaskRepository.getByProjectId(id);
+        List<ProjectTask> projectTasks = projectTaskRepository.getByProjectId(projectId);
         projectTasks.forEach(projectTask -> projectTaskRepository.delete(projectTask));
 
         projectRepository.delete(project);
 
         ProjectResponseDto deletedProjectResponseDto = projectEntityToDto(project);
-        List<ProjectTaskResponseDto> deletedProjectTaskResponsDtos = projectTaskEntitiesToDtos(projectTasks);
+        List<ProjectTaskResponseDto> deletedProjectTaskResponsDtos = projectTaskEntitiesToDtos(projectTasks, projectId);
 
         log.info(Constants.deleteProjectLog(deletedProjectResponseDto, deletedProjectTaskResponsDtos));
 
@@ -106,11 +106,11 @@ public class ProjectDaoImpl implements ProjectDao {
             throw new NotFoundException(Constants.PROJECT_NOT_FOUND, null);
         }
 
-        ProjectTask projectTask = projectTaskDtoToEntity(projectTaskRequestDto, projectId);
-        projectTask.setProject(projectEntity);
+        ProjectTask projectTask = projectTaskDtoToEntity(projectTaskRequestDto, null, projectId);
+        projectTask.setProject_id(projectEntity.getId());
 
         ProjectTask savedProjectTask = projectTaskRepository.save(projectTask);
-        return projectTaskEntityToDto(savedProjectTask);
+        return projectTaskEntityToDto(savedProjectTask, projectId);
     }
 
     @Override
@@ -121,7 +121,7 @@ public class ProjectDaoImpl implements ProjectDao {
             throw new NotFoundException(Constants.PROJECT_TASK_NOT_FOUND, null);
         }
 
-        return projectTaskEntityToDto(projectTask);
+        return projectTaskEntityToDto(projectTask, projectId);
     }
 
     @Override
@@ -130,7 +130,13 @@ public class ProjectDaoImpl implements ProjectDao {
             throw new NotFoundException(Constants.PROJECT_NOT_FOUND, null);
         }
 
-        return projectTaskEntitiesToDtos(projectTaskRepository.findAllByProjectId(projectId));
+        List<ProjectTaskResponseDto> projectTaskResponseDtos = projectTaskEntitiesToDtos(projectTaskRepository.findAllByProjectId(projectId), projectId);
+
+        if (projectTaskResponseDtos.isEmpty()) {
+            throw new NotFoundException(Constants.PROJECT_HAS_NO_TASKS, null);
+        }
+
+        return projectTaskResponseDtos;
     }
 
     @Override
@@ -142,11 +148,11 @@ public class ProjectDaoImpl implements ProjectDao {
             throw new NotFoundException(Constants.PROJECT_TASK_NOT_FOUND, null);
         }
 
-        ProjectTask updatedProjectTaskEntity = projectTaskDtoToEntity(projectTaskRequestDto, projectId);
+        ProjectTask updatedProjectTaskEntity = projectTaskDtoToEntity(projectTaskRequestDto, projectTaskId, projectId);
         updatedProjectTaskEntity.setId(projectTaskId);
 
         ProjectTask savedProjectTask = projectTaskRepository.save(updatedProjectTaskEntity);
-        return projectTaskEntityToDto(savedProjectTask);
+        return projectTaskEntityToDto(savedProjectTask, projectId);
     }
 
     @Override
@@ -158,7 +164,7 @@ public class ProjectDaoImpl implements ProjectDao {
         }
 
         projectTaskRepository.delete(projectTask);
-        ProjectTaskResponseDto deletedProjectTaskResponseDto = projectTaskEntityToDto(projectTask);
+        ProjectTaskResponseDto deletedProjectTaskResponseDto = projectTaskEntityToDto(projectTask, projectId);
         log.info(Constants.deleteProjectTaskMessage(deletedProjectTaskResponseDto));
         return deletedProjectTaskResponseDto;
     }
@@ -176,15 +182,15 @@ public class ProjectDaoImpl implements ProjectDao {
                 null);
     }
 
-    private ProjectTask projectTaskDtoToEntity(ProjectTaskRequestDto projectTaskRequestDto, UUID projectId) {
+    private ProjectTask projectTaskDtoToEntity(ProjectTaskRequestDto projectTaskRequestDto, UUID projectTaskId, UUID projectId) {
         return new ProjectTask(
+                projectTaskId,
                 projectId,
                 projectTaskRequestDto.getName(),
                 projectTaskRequestDto.getDescription(),
                 projectTaskRequestDto.getAcceptance_criteria(),
                 projectTaskRequestDto.getPoints(),
-                projectTaskRequestDto.getStatus(),
-                null
+                projectTaskRequestDto.getStatus()
         );
     }
 
@@ -201,11 +207,7 @@ public class ProjectDaoImpl implements ProjectDao {
         );
     }
 
-    private ProjectTaskResponseDto projectTaskEntityToDto(ProjectTask projectTask) {
-        UUID projectId = null;
-        if (projectTask.getProject() != null) {
-            projectId = projectTask.getProject().getId();
-        }
+    private ProjectTaskResponseDto projectTaskEntityToDto(ProjectTask projectTask, UUID projectId) {
         return new ProjectTaskResponseDto(
                 projectTask.getId(),
                 projectId,
@@ -217,10 +219,10 @@ public class ProjectDaoImpl implements ProjectDao {
         );
     }
 
-    private List<ProjectTaskResponseDto> projectTaskEntitiesToDtos(List<ProjectTask> projectTasks) {
+    private List<ProjectTaskResponseDto> projectTaskEntitiesToDtos(List<ProjectTask> projectTasks, UUID projectId) {
         List<ProjectTaskResponseDto> projectTaskResponsDtos = new ArrayList<ProjectTaskResponseDto>(Collections.emptyList());
         for (ProjectTask projectTask : projectTasks) {
-            ProjectTaskResponseDto projectTaskResponseDto = projectTaskEntityToDto(projectTask);
+            ProjectTaskResponseDto projectTaskResponseDto = projectTaskEntityToDto(projectTask, projectId);
             projectTaskResponsDtos.add(projectTaskResponseDto);
         }
         return projectTaskResponsDtos;

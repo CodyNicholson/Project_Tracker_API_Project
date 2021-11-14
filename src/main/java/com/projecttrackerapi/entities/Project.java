@@ -34,6 +34,6 @@ public class Project {
     private String documentation_link;
     private String code_link;
 
-    @OneToMany(mappedBy = "project")
+    @OneToMany(mappedBy = "project_id")
     private List<ProjectTask> projectTasks;
 }

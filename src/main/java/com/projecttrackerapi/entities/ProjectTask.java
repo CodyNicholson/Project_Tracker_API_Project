@@ -22,13 +22,10 @@ public class ProjectTask {
     )
     @Column(name = "id", updatable = false, nullable = false)
     private UUID id;
+    private UUID project_id;
     private String name;
     private String description;
     private String acceptance_criteria;
     private double points;
     private String status;
-
-    @ManyToOne
-    @JoinColumn(name="project_id", nullable=false)
-    private Project project;
 }
