@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 @Data
@@ -19,4 +20,5 @@ public class ProjectResponseDto {
     private String deployed_link;
     private String documentation_link;
     private String code_link;
+    private List<ProjectTaskResponseDto> project_tasks;
 }

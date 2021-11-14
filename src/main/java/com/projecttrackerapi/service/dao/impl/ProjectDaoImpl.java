@@ -203,7 +203,8 @@ public class ProjectDaoImpl implements ProjectDao {
                 project.getEnd_date(),
                 project.getDeployed_link(),
                 project.getDocumentation_link(),
-                project.getCode_link()
+                project.getCode_link(),
+                projectTaskEntitiesToDtos(project.getProjectTasks(), project.getId())
         );
     }
 
