@@ -221,6 +221,10 @@ public class ProjectDaoImpl implements ProjectDao {
     }
 
     private List<ProjectTaskResponseDto> projectTaskEntitiesToDtos(List<ProjectTask> projectTasks, UUID projectId) {
+        if (projectTasks == null) {
+            return Collections.emptyList();
+        }
+
         List<ProjectTaskResponseDto> projectTaskResponsDtos = new ArrayList<ProjectTaskResponseDto>(Collections.emptyList());
         for (ProjectTask projectTask : projectTasks) {
             ProjectTaskResponseDto projectTaskResponseDto = projectTaskEntityToDto(projectTask, projectId);
