@@ -2,7 +2,6 @@ package com.projecttrackerapi.entities;
 
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import java.util.UUID;
@@ -14,13 +13,12 @@ import java.util.UUID;
 @Table(name = "projecttask")
 public class ProjectTask {
     @Id
-    @Type(type = "pg-uuid")
     @GeneratedValue(generator = "UUID")
     @GenericGenerator(
             name = "UUID",
             strategy = "org.hibernate.id.UUIDGenerator"
     )
-    @Column(name = "id", updatable = false, nullable = false)
+    @Column(name = "id", columnDefinition = "uuid", updatable = false, nullable = false)
     private UUID id;
     private UUID project_id;
     private String name;
