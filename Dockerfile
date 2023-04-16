@@ -19,3 +19,7 @@ ENTRYPOINT ["sh", "-c", "java ${JAVA_OPTS} -jar /app.jar ${0} ${@}"]
 # psql -h localhost -p 5432 -U postgres -W
 
 # docker run -p 9000:9000 --network=host --env-file ./docker.env project-tracker --server.port=9000
+
+# docker ps
+# docker container inspect 826800376d78
+# docker network ls
